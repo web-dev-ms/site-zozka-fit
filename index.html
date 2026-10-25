@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#f3f4f6">
     <title>ZOZKA FIT</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -213,6 +213,40 @@
             background: var(--accent-red-hover);
         }
 
+        .primary-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .secondary-btn {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.8rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            width: 100%;
+            min-height: 46px;
+            margin-top: 0.7rem;
+        }
+
+        .secondary-btn:hover {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        .secondary-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .social-only-card {
             display: flex;
             flex-direction: column;
@@ -348,7 +382,7 @@
             width: 100%;
             margin: 0 auto;
             padding: 2rem 1.5rem;
-            padding-bottom: max(2rem, env(safe-area-inset-bottom));
+            padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -800,6 +834,271 @@
             font-weight: 700;
         }
 
+        .cert-box.has-img {
+            border-style: solid;
+            padding: 0;
+            overflow: hidden;
+            cursor: pointer;
+            min-height: 0;
+            aspect-ratio: 4 / 3;
+            background: #fff;
+        }
+
+        .cert-box.has-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            background: #fff;
+        }
+
+        /* ================== IMAGE VIEWER ================== */
+        .image-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 3200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+
+        .image-modal.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .image-modal img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .image-close {
+            position: absolute;
+            top: max(12px, env(safe-area-inset-top));
+            right: 12px;
+        }
+
+        /* ================== COACH NOTE: ADMIN EDITOR ================== */
+        .note-edit-box {
+            max-width: 520px;
+        }
+
+        .note-edit-client {
+            display: inline-block;
+            background: rgba(220, 38, 38, 0.08);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            color: var(--accent-red);
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            word-break: break-word;
+        }
+
+        .note-textarea {
+            width: 100%;
+            min-height: 260px;
+            padding: 0.9rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            border-radius: 10px;
+            font-family: 'Cairo', 'Montserrat', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.8;
+            color: var(--text-primary);
+            outline: none;
+            resize: vertical;
+            text-align: start;
+            margin-bottom: 0.6rem;
+        }
+
+        .note-textarea:focus {
+            border-color: var(--accent-red);
+            background: #fff;
+        }
+
+        .note-status {
+            font-size: 0.75rem;
+            font-weight: 700;
+            min-height: 1.3rem;
+            margin-bottom: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .note-status.ok {
+            color: var(--accent-green);
+        }
+
+        .note-status.error {
+            color: var(--accent-red);
+        }
+
+        /* ================== COACH NOTE: CLIENT ICON + POPUP ================== */
+        .note-fab {
+            position: fixed;
+            right: 16px;
+            bottom: max(16px, env(safe-area-inset-bottom));
+            z-index: 2000;
+            height: 54px;
+            padding: 0 20px 0 16px;
+            border-radius: 30px;
+            background: var(--accent-red);
+            color: #fff;
+            border: none;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4);
+        }
+
+        .note-fab.visible {
+            display: flex;
+        }
+
+        .note-fab i {
+            font-size: 1.25rem;
+        }
+
+        .note-fab .note-dot {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #facc15;
+            border: 2px solid #fff;
+            display: none;
+        }
+
+        .note-fab.has-note .note-dot {
+            display: block;
+        }
+
+        .note-fab.has-note {
+            animation: notePulse 1.8s infinite;
+        }
+
+        @keyframes notePulse {
+            0%, 100% { box-shadow: 0 6px 16px rgba(220, 38, 38, 0.35); }
+            50% { box-shadow: 0 6px 24px rgba(220, 38, 38, 0.8); }
+        }
+
+        .note-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 3100;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+
+        .note-modal.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .note-modal-content {
+            width: 100%;
+            max-width: 560px;
+            max-height: 85vh;
+            max-height: 85dvh;
+            background: #fff;
+            border-radius: 18px 18px 0 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .note-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding: 0.9rem 1.1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .note-modal-header h4 {
+            font-size: 0.9rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .note-modal-header h4 i {
+            color: var(--accent-red);
+        }
+
+        .note-modal .video-close-btn {
+            background: var(--bg-color);
+            color: var(--text-primary);
+        }
+
+        .note-modal .video-close-btn:hover {
+            background: var(--accent-red);
+            color: #fff;
+        }
+
+        .note-modal-body {
+            padding: 1.1rem;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            font-family: 'Cairo', 'Montserrat', sans-serif;
+            font-size: 1.02rem;
+            font-weight: 600;
+            line-height: 1.9;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: var(--text-primary);
+            text-align: start;
+        }
+
+        .note-modal-body.empty {
+            color: var(--text-secondary);
+            text-align: center;
+            font-size: 0.85rem;
+            white-space: normal;
+        }
+
+        .note-modal-meta {
+            padding: 0.6rem 1.1rem 0.9rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (min-width: 600px) {
+            .note-modal {
+                align-items: center;
+                padding: 1rem;
+            }
+
+            .note-modal-content {
+                border-radius: 16px;
+            }
+        }
+
         .info-list {
             text-align: left;
             background: var(--bg-color);
@@ -889,7 +1188,7 @@
 
             .app-container {
                 padding: 1rem;
-                padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+                padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
             }
 
             .header {
@@ -964,6 +1263,10 @@
 
             .cert-box {
                 min-height: 150px;
+            }
+
+            .note-textarea {
+                min-height: 220px;
             }
 
             .video-modal {
@@ -1043,9 +1346,9 @@
                             <i class="fa-brands fa-tiktok"></i>
                             <span>TikTok</span>
                         </a>
-                        <a href="https://wa.me/01038255702" target="_blank" rel="noopener" class="social-btn">
+                        <a href="https://wa.me/201038255702" target="_blank" rel="noopener" class="social-btn">
                             <i class="fa-brands fa-whatsapp"></i>
-                            <span>WhatsApp</span>
+                            <span>WhatsApp +20 103 8255702</span>
                         </a>
                         <!-- لينك الموقع التاني: شيل النقط من SITE_LINK في السكريبت وحط اللينك -->
                         <a id="site-link-btn" href="#" target="_blank" rel="noopener" class="social-btn">
@@ -1102,28 +1405,8 @@
                 <p>Elite training credentials and accreditations</p>
             </div>
 
-            <div class="certs-grid">
-                <div class="cert-box">
-                    <i class="fa-solid fa-image"></i>
-                    <span>CERTIFICATE #01</span>
-                </div>
-                <div class="cert-box">
-                    <i class="fa-solid fa-image"></i>
-                    <span>CERTIFICATE #02</span>
-                </div>
-                <div class="cert-box">
-                    <i class="fa-solid fa-image"></i>
-                    <span>CERTIFICATE #03</span>
-                </div>
-                <div class="cert-box">
-                    <i class="fa-solid fa-image"></i>
-                    <span>CERTIFICATE #04</span>
-                </div>
-                <div class="cert-box">
-                    <i class="fa-solid fa-image"></i>
-                    <span>CERTIFICATE #05</span>
-                </div>
-            </div>
+            <!-- الشهادات بتتعمل أوتوماتيك من certImages في السكريبت (6 أماكن) -->
+            <div id="certs-grid" class="certs-grid"></div>
 
         </div>
     </div>
@@ -1160,6 +1443,31 @@
             <button id="info-back-btn" class="primary-btn">
                 <span>BACK</span>
                 <i class="fa-solid fa-arrow-left"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- COACH NOTE EDITOR (ADMIN ONLY) -->
+    <div id="note-screen" class="screen hidden">
+        <div class="welcome-screen-box note-edit-box">
+            <div class="logo-badge">
+                <i class="fa-solid fa-clipboard-list"></i>
+            </div>
+            <h1>COACH NOTE</h1>
+            <div id="note-edit-client" class="note-edit-client">-</div>
+            <textarea id="note-textarea" class="note-textarea" dir="auto" maxlength="3000" placeholder="Write the workout for this client... / اكتب التمرينة للمشترك هنا"></textarea>
+            <div id="note-edit-status" class="note-status"></div>
+            <button id="note-save-btn" class="primary-btn">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span>SAVE NOTE</span>
+            </button>
+            <button id="note-clear-btn" class="secondary-btn">
+                <i class="fa-solid fa-trash"></i>
+                <span>DELETE NOTE</span>
+            </button>
+            <button id="note-back-btn" class="secondary-btn">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>BACK</span>
             </button>
         </div>
     </div>
@@ -1257,6 +1565,35 @@
         </section>
     </div>
 
+    <!-- COACH NOTE ICON (CLIENT) -->
+    <button id="note-fab" class="note-fab" aria-label="Coach note">
+        <i class="fa-solid fa-clipboard-list"></i>
+        <span>COACH NOTE</span>
+        <span class="note-dot"></span>
+    </button>
+
+    <!-- COACH NOTE POPUP (CLIENT) -->
+    <div id="note-modal" class="note-modal hidden">
+        <div class="note-modal-content">
+            <div class="note-modal-header">
+                <h4><i class="fa-solid fa-clipboard-list"></i> YOUR COACH NOTE</h4>
+                <button id="note-close-btn" class="video-close-btn" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="note-modal-body" class="note-modal-body empty" dir="auto">Loading...</div>
+            <div id="note-modal-meta" class="note-modal-meta"></div>
+        </div>
+    </div>
+
+    <!-- IMAGE VIEWER (CERTIFICATES) -->
+    <div id="image-modal" class="image-modal hidden">
+        <button id="image-close-btn" class="video-close-btn image-close" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <img id="image-viewer" alt="">
+    </div>
+
     <!-- VIDEO MODAL -->
     <div id="video-modal" class="video-modal hidden">
         <div class="video-modal-content">
@@ -1284,7 +1621,23 @@
     <script>
         // ================== لينك الموقع التاني ==================
         // شيل النقط وحط اللينك مكانها، مثال: "https://example.com"
-        const SITE_LINK = "https://ahmedrapie1.github.io/Package-ZOZKA-FIT/";
+        const SITE_LINK = "..................";
+
+        // ================== قاعدة بيانات النوت (Firebase) ==================
+        // النوت لازم تتخزن أونلاين عشان الكابتن يكتبها من جهازه والمشترك يشوفها على تليفونه
+        const FIREBASE_URL = "https://smashgymapplication-6f9125b2-default-rtdb.firebaseio.com";
+        const NOTES_PATH = "zozka_notes";
+
+        // ================== صور الشهادات (6 أماكن) ==================
+        // امسح النقط وحط اسم الصورة (أو لينكها) مكانها، مثال: "cert1.jpg"
+        const certImages = [
+            "........................................................",
+            "........................................................",
+            "........................................................",
+            "........................................................",
+            "........................................................",
+            "........................................................"
+        ];
 
         // ================== PROGRAMS ==================
         const programsData = {
@@ -1597,6 +1950,7 @@
         const MAX_ADD = 100;
 
         let currentProgramKey = null;
+        let currentClientCode = null;   // كود المشترك اللي دخل حالياً (للنوت)
 
         // ================== ELEMENTS ==================
         const loginScreen = document.getElementById('login-screen');
@@ -1618,6 +1972,24 @@
         const infoClientRemaining = document.getElementById('info-client-remaining');
         const infoClientExtra = document.getElementById('info-client-extra');
         const infoBackBtn = document.getElementById('info-back-btn');
+
+        const noteScreen = document.getElementById('note-screen');
+        const noteEditClient = document.getElementById('note-edit-client');
+        const noteTextarea = document.getElementById('note-textarea');
+        const noteEditStatus = document.getElementById('note-edit-status');
+        const noteSaveBtn = document.getElementById('note-save-btn');
+        const noteClearBtn = document.getElementById('note-clear-btn');
+        const noteBackBtn = document.getElementById('note-back-btn');
+
+        const noteFab = document.getElementById('note-fab');
+        const noteModal = document.getElementById('note-modal');
+        const noteModalBody = document.getElementById('note-modal-body');
+        const noteModalMeta = document.getElementById('note-modal-meta');
+        const noteCloseBtn = document.getElementById('note-close-btn');
+
+        const imageModal = document.getElementById('image-modal');
+        const imageViewer = document.getElementById('image-viewer');
+        const imageCloseBtn = document.getElementById('image-close-btn');
 
         const introScreen = document.getElementById('intro-screen');
         const readyBtn = document.getElementById('ready-btn');
@@ -1665,6 +2037,57 @@
         infoBackBtn.addEventListener('click', () => {
             infoScreen.classList.add('hidden');
             loginScreen.classList.remove('hidden');
+        });
+
+        // ================== الشهادات (6 أماكن) ==================
+        function renderCerts() {
+            const grid = document.getElementById('certs-grid');
+            grid.innerHTML = '';
+
+            certImages.forEach((src, i) => {
+                const label = `CERTIFICATE #${pad2(i + 1)}`;
+                const box = document.createElement('div');
+
+                const showPlaceholder = () => {
+                    box.className = 'cert-box';
+                    box.innerHTML = `<i class="fa-solid fa-image"></i><span>${label}</span>`;
+                    box.onclick = null;
+                };
+
+                showPlaceholder();
+
+                if (src && !src.includes('...')) {
+                    const img = new Image();
+                    img.alt = label;
+                    img.onload = () => {
+                        box.className = 'cert-box has-img';
+                        box.innerHTML = '';
+                        box.appendChild(img);
+                        box.onclick = () => openImage(src, label);
+                    };
+                    img.onerror = showPlaceholder;
+                    img.src = src;
+                }
+
+                grid.appendChild(box);
+            });
+        }
+
+        function openImage(src, label) {
+            imageViewer.src = src;
+            imageViewer.alt = label;
+            imageModal.classList.remove('hidden');
+        }
+
+        function closeImage() {
+            imageModal.classList.add('hidden');
+            imageViewer.removeAttribute('src');
+        }
+
+        imageModal.addEventListener('click', closeImage);
+        imageCloseBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeImage();
         });
 
         // ================== رسائل الخطأ والنجاح ==================
@@ -1741,6 +2164,21 @@
             return null;
         }
 
+        // أمر النوت: (كود المشترك) (كود الماستر) NOTE   مثال: SARAA RAPI3 NOTE
+        function parseNoteCommand(raw) {
+            const tokens = raw.split(' ');
+            if (tokens.length < 3) return null;
+            if (tokens[tokens.length - 1] !== 'NOTE') return null;
+
+            const master = tokens[tokens.length - 2];
+            const client = tokens.slice(0, -2).join(' ');
+
+            if (!developers.includes(master)) return null;
+            if (!allowedClients.includes(client)) return null;
+
+            return { client };
+        }
+
         // ================== عداد الجلسات ==================
         function getVisits(code) {
             return parseInt(localStorage.getItem(`visits_${code}`) || '0', 10);
@@ -1770,6 +2208,8 @@
 
         function loginAsAdmin(code) {
             hideMessages();
+            currentClientCode = null;
+            noteFab.classList.remove('visible', 'has-note');
             counterBadgeContainer.style.display = 'none';
             visitWelcomeText.textContent = `WELCOME BACK ENGINEER (${code}) - ADMIN MODE`;
 
@@ -1780,6 +2220,9 @@
 
         function loginAsClient(code) {
             hideMessages();
+
+            currentClientCode = code;
+            noteFab.classList.remove('visible', 'has-note');
 
             const used = getVisits(code) + 1;
             localStorage.setItem(`visits_${code}`, used);
@@ -1825,6 +2268,13 @@
             e.preventDefault();
             hideMessages();
             const rawInput = passwordInput.value.trim().toUpperCase().replace(/\s+/g, ' ');
+
+            // الحالة N: كتابة / تعديل نوت لمشترك  (SARAA RAPI3 NOTE)
+            const noteCmd = parseNoteCommand(rawInput);
+            if (noteCmd) {
+                openNoteEditor(noteCmd.client);
+                return;
+            }
 
             // الحالة A: ريست أو زيادة جلسات
             const sessionCmd = parseSessionCommand(rawInput);
@@ -1910,6 +2360,186 @@
         readyBtn.addEventListener('click', () => {
             introScreen.classList.add('hidden');
             appContainer.classList.remove('hidden');
+
+            // أيقونة النوت بتظهر للمشترك بس (مش للماستر)
+            if (currentClientCode) {
+                noteFab.classList.add('visible');
+                refreshNoteBadge();
+            }
+        });
+
+        // ================== COACH NOTES ==================
+        function noteUrl(code) {
+            const key = code.replace(/[.$#\[\]\/]/g, '').replace(/\s+/g, '_');
+            return `${FIREBASE_URL.replace(/\/+$/, '')}/${NOTES_PATH}/${encodeURIComponent(key)}.json`;
+        }
+
+        async function fetchNote(code) {
+            const r = await fetch(noteUrl(code), { cache: 'no-store' });
+            if (!r.ok) throw new Error('net');
+            return await r.json();   // null أو { text, updatedAt }
+        }
+
+        async function saveNote(code, text) {
+            const r = await fetch(noteUrl(code), {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: text, updatedAt: Date.now() })
+            });
+            if (!r.ok) throw new Error('net');
+        }
+
+        async function deleteNote(code) {
+            const r = await fetch(noteUrl(code), { method: 'DELETE' });
+            if (!r.ok) throw new Error('net');
+        }
+
+        function formatNoteDate(ts) {
+            if (!ts) return '';
+            try {
+                return new Date(ts).toLocaleString('en-GB', {
+                    day: '2-digit', month: 'short', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit'
+                });
+            } catch (e) {
+                return '';
+            }
+        }
+
+        // ---------- صفحة الكابتن (كتابة / تعديل النوت) ----------
+        let noteEditingClient = null;
+
+        function setNoteStatus(text, kind) {
+            noteEditStatus.textContent = text;
+            noteEditStatus.className = 'note-status' + (kind ? ' ' + kind : '');
+        }
+
+        function setNoteBusy(busy) {
+            noteSaveBtn.disabled = busy;
+            noteClearBtn.disabled = busy;
+        }
+
+        async function openNoteEditor(client) {
+            hideMessages();
+            passwordInput.value = '';
+
+            noteEditingClient = client;
+            noteEditClient.textContent = client;
+            noteTextarea.value = '';
+            setNoteStatus('Loading current note...', '');
+            setNoteBusy(true);
+
+            loginScreen.classList.add('hidden');
+            noteScreen.classList.remove('hidden');
+
+            try {
+                const n = await fetchNote(client);
+                if (n && n.text) {
+                    noteTextarea.value = n.text;
+                    setNoteStatus('Last updated: ' + formatNoteDate(n.updatedAt), '');
+                } else {
+                    setNoteStatus('No note yet. Write one below.', '');
+                }
+            } catch (e) {
+                setNoteStatus('Could not load the current note. Check your internet.', 'error');
+            }
+            setNoteBusy(false);
+        }
+
+        noteSaveBtn.addEventListener('click', async () => {
+            if (!noteEditingClient) return;
+            const text = noteTextarea.value.trim();
+            if (!text) {
+                setNoteStatus('Write something first, or use DELETE NOTE to remove it.', 'error');
+                return;
+            }
+            setNoteBusy(true);
+            setNoteStatus('Saving...', '');
+            try {
+                await saveNote(noteEditingClient, text);
+                setNoteStatus('Saved ✅ - the client can see it now / تم الحفظ', 'ok');
+            } catch (e) {
+                setNoteStatus('Could not save. Check your internet and try again.', 'error');
+            }
+            setNoteBusy(false);
+        });
+
+        noteClearBtn.addEventListener('click', async () => {
+            if (!noteEditingClient) return;
+            if (!confirm(`Delete the note for ${noteEditingClient}?`)) return;
+            setNoteBusy(true);
+            setNoteStatus('Deleting...', '');
+            try {
+                await deleteNote(noteEditingClient);
+                noteTextarea.value = '';
+                setNoteStatus('Note deleted ✅ / تم الحذف', 'ok');
+            } catch (e) {
+                setNoteStatus('Could not delete. Check your internet and try again.', 'error');
+            }
+            setNoteBusy(false);
+        });
+
+        noteBackBtn.addEventListener('click', () => {
+            noteEditingClient = null;
+            noteScreen.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+        });
+
+        // ---------- أيقونة المشترك ----------
+        async function refreshNoteBadge() {
+            if (!currentClientCode) return;
+            try {
+                const n = await fetchNote(currentClientCode);
+                noteFab.classList.toggle('has-note', !!(n && n.text));
+            } catch (e) {
+                /* مفيش نت: نسيب الأيقونة زي ما هي */
+            }
+        }
+
+        async function openNoteModal() {
+            if (!currentClientCode) return;
+
+            noteModal.classList.remove('hidden');
+            noteModalBody.className = 'note-modal-body empty';
+            noteModalBody.textContent = 'Loading...';
+            noteModalMeta.textContent = '';
+
+            try {
+                const n = await fetchNote(currentClientCode);
+                if (n && n.text) {
+                    noteModalBody.className = 'note-modal-body';
+                    noteModalBody.textContent = n.text;
+                    noteModalMeta.textContent = 'Updated: ' + formatNoteDate(n.updatedAt);
+                    noteFab.classList.add('has-note');
+                } else {
+                    noteModalBody.textContent = 'NO NOTE FROM YOUR COACH YET / لا توجد ملاحظات من الكابتن حتى الآن';
+                    noteFab.classList.remove('has-note');
+                }
+            } catch (e) {
+                noteModalBody.textContent = 'COULD NOT LOAD THE NOTE. CHECK YOUR INTERNET AND TRY AGAIN / تأكد من الإنترنت وحاول مرة أخرى';
+            }
+        }
+
+        function closeNoteModal() {
+            noteModal.classList.add('hidden');
+        }
+
+        noteFab.addEventListener('click', openNoteModal);
+        noteCloseBtn.addEventListener('click', closeNoteModal);
+        noteModal.addEventListener('click', (e) => {
+            if (e.target === noteModal) closeNoteModal();
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && noteFab.classList.contains('visible')) {
+                refreshNoteBadge();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Escape') return;
+            closeNoteModal();
+            closeImage();
         });
 
         // ================== NAVIGATION ==================
@@ -2105,6 +2735,9 @@
             if (e.key === 'ArrowRight') videoNextBtn.click();
             if (e.key === 'ArrowLeft') videoPrevBtn.click();
         });
+
+        // ================== START ==================
+        renderCerts();
     </script>
 </body>
 </html>
