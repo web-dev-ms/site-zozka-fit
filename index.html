@@ -1,2743 +1,478 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#f3f4f6">
-    <title>ZOZKA FIT</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-color: #f3f4f6;
-            --card-bg: #ffffff;
-            --text-primary: #111827;
-            --text-secondary: #4b5563;
-            --accent-red: #dc2626;
-            --accent-red-hover: #b91c1c;
-            --accent-green: #16a34a;
-            --border-color: #e5e7eb;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-            --transition: all 0.2s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html {
-            -webkit-text-size-adjust: 100%;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            min-height: 100vh;
-            min-height: 100dvh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            height: 100dvh;
-            background: var(--bg-color);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            z-index: 1000;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            padding: 1.5rem;
-            padding-top: max(1.5rem, env(safe-area-inset-top));
-            padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
-            transition: opacity 0.4s ease, visibility 0.4s ease;
-        }
-
-        .screen > * {
-            margin-top: auto;
-            margin-bottom: auto;
-        }
-
-        .screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .login-container-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            max-width: 900px;
-            width: 100%;
-        }
-
-        .login-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            width: 100%;
-            background: transparent;
-        }
-
-        .login-card-box {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 2.5rem 2rem;
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            text-align: center;
-        }
-
-        .logo-badge {
-            width: 70px;
-            height: 70px;
-            background: var(--text-primary);
-            color: var(--accent-red);
-            font-size: 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-            margin: 0 auto 1rem auto;
-            flex-shrink: 0;
-        }
-
-        .login-card-box h1,
-        .welcome-screen-box h1 {
-            font-size: 1.8rem;
-            font-weight: 900;
-            letter-spacing: 1px;
-            margin-bottom: 0.2rem;
-        }
-
-        .login-card-box p {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            letter-spacing: 1px;
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-        }
-
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            text-align: left;
-        }
-
-        .input-group {
-            position: relative;
-        }
-
-        .input-group > i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-        }
-
-        .login-input {
-            width: 100%;
-            padding: 0.9rem 15px 0.9rem 45px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-color);
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-primary);
-            outline: none;
-            text-transform: uppercase;
-            transition: var(--transition);
-        }
-
-        .login-input:focus {
-            border-color: var(--accent-red);
-            background: #fff;
-        }
-
-        .error-msg {
-            color: var(--accent-red);
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-align: center;
-            margin-top: -0.5rem;
-            display: none;
-            line-height: 1.6;
-        }
-
-        .success-msg {
-            color: var(--accent-green);
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-align: center;
-            margin-top: -0.5rem;
-            display: none;
-            line-height: 1.6;
-        }
-
-        .primary-btn {
-            background: var(--accent-red);
-            color: white;
-            border: none;
-            padding: 0.9rem 2.5rem;
-            font-size: 1rem;
-            font-weight: 700;
-            border-radius: 8px;
-            cursor: pointer;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            transition: var(--transition);
-            width: 100%;
-            text-decoration: none;
-            box-shadow: var(--shadow);
-            min-height: 48px;
-        }
-
-        .primary-btn:hover {
-            background: var(--accent-red-hover);
-        }
-
-        .primary-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .secondary-btn {
-            background: var(--card-bg);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            padding: 0.8rem 1.5rem;
-            font-size: 0.9rem;
-            font-weight: 700;
-            border-radius: 8px;
-            cursor: pointer;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            transition: var(--transition);
-            width: 100%;
-            min-height: 46px;
-            margin-top: 0.7rem;
-        }
-
-        .secondary-btn:hover {
-            border-color: var(--accent-red);
-            color: var(--accent-red);
-        }
-
-        .secondary-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .social-only-card {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 1.2rem;
-        }
-
-        .social-only-card h3 {
-            font-size: 1rem;
-            font-weight: 800;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 0.5rem;
-        }
-
-        .social-only-card h3 i {
-            color: var(--accent-red);
-        }
-
-        .social-links-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .social-btn {
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 0.8rem 1rem;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            transition: var(--transition);
-            cursor: pointer;
-            min-height: 48px;
-        }
-
-        .social-btn i {
-            font-size: 1.2rem;
-            color: var(--accent-red);
-            width: 24px;
-            text-align: center;
-        }
-
-        .social-btn:hover {
-            border-color: var(--accent-red);
-            background: #fff;
-            transform: translateX(-4px);
-        }
-
-        .developer-footer-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            box-shadow: var(--shadow);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .dev-info-left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
-            font-weight: 800;
-            color: var(--text-primary);
-        }
-
-        .dev-info-left i {
-            color: var(--accent-red);
-        }
-
-        .dev-info-right {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .dev-contact-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: var(--transition);
-            word-break: break-all;
-        }
-
-        .dev-contact-item i {
-            color: var(--accent-red);
-        }
-
-        .dev-contact-item:hover {
-            color: var(--accent-red);
-        }
-
-        .welcome-screen-box {
-            text-align: center;
-            padding: 2rem;
-            max-width: 450px;
-            width: 100%;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-        }
-
-        .welcome-screen-box p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
-        }
-
-        .app-container {
-            max-width: 1000px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-            padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .app-container.hidden {
-            display: none;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 0.6rem;
-            margin-bottom: 2.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .mini-logo {
-            width: 36px;
-            height: 36px;
-            background: var(--accent-red);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 6px;
-            font-size: 1rem;
-            flex-shrink: 0;
-        }
-
-        .logo-area h2 {
-            font-size: 1.2rem;
-            font-weight: 900;
-        }
-
-        .visit-counter-badge {
-            background: rgba(220, 38, 38, 0.08);
-            border: 1px solid rgba(220, 38, 38, 0.2);
-            color: var(--accent-red);
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .nav-back-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            min-height: 40px;
-        }
-
-        .nav-back-btn:hover {
-            transform: translateY(-1px);
-            background: #fafafa;
-            border-color: var(--accent-red);
-            color: var(--accent-red);
-        }
-
-        .nav-back-btn.hidden {
-            display: none;
-        }
-
-        .view-section {
-            display: none;
-        }
-
-        .view-section.active {
-            display: block;
-        }
-
-        .section-title {
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .section-title h3 {
-            font-size: 1.6rem;
-            font-weight: 800;
-            margin-bottom: 0.3rem;
-        }
-
-        .section-title p {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-        }
-
-        .programs-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .program-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 1.2rem 1.5rem;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 1.2rem;
-            cursor: pointer;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-
-        .program-card:hover,
-        .program-card:active {
-            border-color: var(--accent-red);
-        }
-
-        .program-icon {
-            width: 45px;
-            height: 45px;
-            background: rgba(220, 38, 38, 0.08);
-            color: var(--accent-red);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            flex-shrink: 0;
-        }
-
-        .program-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .program-info h4 {
-            font-size: 1.05rem;
-            font-weight: 700;
-            margin-bottom: 0.2rem;
-        }
-
-        .program-card > i {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1rem;
-        }
-
-        .category-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 1.3rem 1.5rem;
-            border-radius: 10px;
-            cursor: pointer;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .category-card:hover,
-        .category-card:active {
-            border-color: var(--accent-red);
-        }
-
-        .category-card h4 {
-            font-size: 1rem;
-            font-weight: 700;
-        }
-
-        .category-card i {
-            color: var(--accent-red);
-            font-size: 1rem;
-        }
-
-        /* ================== EXERCISE SLOTS (VIDEO) ================== */
-        .slots-grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-            gap: 1rem;
-        }
-
-        .slot-box {
-            position: relative;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            transition: var(--transition);
-        }
-
-        .slot-thumb {
-            position: relative;
-            width: 100%;
-            height: 110px;
-            background: #111827;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .slot-thumb video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            pointer-events: none;
-            display: block;
-        }
-
-        .slot-play {
-            position: absolute;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: rgba(220, 38, 38, 0.92);
-            color: #fff;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            padding-left: 3px;
-        }
-
-        .slot-info {
-            padding: 0.7rem 0.8rem;
-            text-align: center;
-        }
-
-        .slot-box .slot-num {
-            font-size: 1rem;
-            font-weight: 800;
-            color: var(--accent-red);
-            margin-bottom: 0.1rem;
-        }
-
-        .slot-box .slot-label {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            word-break: break-word;
-        }
-
-        .slot-box.has-video {
-            cursor: pointer;
-        }
-
-        .slot-box.has-video .slot-play {
-            display: flex;
-        }
-
-        .slot-box.has-video:hover {
-            border-color: var(--accent-red);
-            transform: translateY(-3px);
-        }
-
-        .slot-box.no-video {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .slot-box.no-video .slot-thumb {
-            background: #e5e7eb;
-            color: #9ca3af;
-            font-size: 1.6rem;
-        }
-
-        .slot-box.no-video .slot-num {
-            color: var(--text-secondary);
-        }
-
-        /* ================== VIDEO MODAL ================== */
-        .video-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.88);
-            z-index: 3000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            padding-top: max(1rem, env(safe-area-inset-top));
-            padding-bottom: max(1rem, env(safe-area-inset-bottom));
-            transition: opacity 0.25s ease, visibility 0.25s ease;
-        }
-
-        .video-modal.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .video-modal-content {
-            width: 100%;
-            max-width: 560px;
-            max-height: 100%;
-            background: #111827;
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .video-modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            padding: 0.9rem 1.1rem;
-            color: #fff;
-        }
-
-        .video-modal-header h4 {
-            font-size: 0.9rem;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            min-width: 0;
-            word-break: break-word;
-        }
-
-        .video-close-btn {
-            background: rgba(255, 255, 255, 0.12);
-            border: none;
-            color: #fff;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: var(--transition);
-            flex-shrink: 0;
-        }
-
-        .video-close-btn:hover {
-            background: var(--accent-red);
-        }
-
-        .video-modal video {
-            width: 100%;
-            min-height: 0;
-            max-height: 62vh;
-            max-height: 62dvh;
-            background: #000;
-            display: block;
-        }
-
-        .video-modal-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.8rem 1.1rem;
-            gap: 10px;
-        }
-
-        .video-nav-btn {
-            background: var(--accent-red);
-            color: #fff;
-            border: none;
-            padding: 0.65rem 1rem;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: var(--transition);
-            min-height: 42px;
-        }
-
-        .video-nav-btn:hover {
-            background: var(--accent-red-hover);
-        }
-
-        .video-nav-btn:disabled {
-            background: #374151;
-            color: #9ca3af;
-            cursor: not-allowed;
-        }
-
-        .video-counter {
-            color: #d1d5db;
-            font-size: 0.8rem;
-            font-weight: 700;
-        }
-
-        /* ================== CERTS ================== */
-        .certs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .cert-box {
-            background: var(--card-bg);
-            border: 2px dashed var(--border-color);
-            border-radius: 12px;
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            color: var(--text-secondary);
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-
-        .cert-box:hover {
-            border-color: var(--accent-red);
-            background: #fafafa;
-        }
-
-        .cert-box i {
-            font-size: 2.5rem;
-            color: var(--accent-red);
-        }
-
-        .cert-box span {
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        .cert-box.has-img {
-            border-style: solid;
-            padding: 0;
-            overflow: hidden;
-            cursor: pointer;
-            min-height: 0;
-            aspect-ratio: 4 / 3;
-            background: #fff;
-        }
-
-        .cert-box.has-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-            background: #fff;
-        }
-
-        /* ================== IMAGE VIEWER ================== */
-        .image-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.92);
-            z-index: 3200;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            transition: opacity 0.25s ease, visibility 0.25s ease;
-        }
-
-        .image-modal.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .image-modal img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            border-radius: 8px;
-        }
-
-        .image-close {
-            position: absolute;
-            top: max(12px, env(safe-area-inset-top));
-            right: 12px;
-        }
-
-        /* ================== COACH NOTE: ADMIN EDITOR ================== */
-        .note-edit-box {
-            max-width: 520px;
-        }
-
-        .note-edit-client {
-            display: inline-block;
-            background: rgba(220, 38, 38, 0.08);
-            border: 1px solid rgba(220, 38, 38, 0.2);
-            color: var(--accent-red);
-            padding: 0.4rem 0.9rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            word-break: break-word;
-        }
-
-        .note-textarea {
-            width: 100%;
-            min-height: 260px;
-            padding: 0.9rem;
-            border: 1px solid var(--border-color);
-            background: var(--bg-color);
-            border-radius: 10px;
-            font-family: 'Cairo', 'Montserrat', sans-serif;
-            font-size: 16px;
-            font-weight: 600;
-            line-height: 1.8;
-            color: var(--text-primary);
-            outline: none;
-            resize: vertical;
-            text-align: start;
-            margin-bottom: 0.6rem;
-        }
-
-        .note-textarea:focus {
-            border-color: var(--accent-red);
-            background: #fff;
-        }
-
-        .note-status {
-            font-size: 0.75rem;
-            font-weight: 700;
-            min-height: 1.3rem;
-            margin-bottom: 0.9rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .note-status.ok {
-            color: var(--accent-green);
-        }
-
-        .note-status.error {
-            color: var(--accent-red);
-        }
-
-        /* ================== COACH NOTE: CLIENT ICON + POPUP ================== */
-        .note-fab {
-            position: fixed;
-            right: 16px;
-            bottom: max(16px, env(safe-area-inset-bottom));
-            z-index: 2000;
-            height: 54px;
-            padding: 0 20px 0 16px;
-            border-radius: 30px;
-            background: var(--accent-red);
-            color: #fff;
-            border: none;
-            display: none;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.8rem;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4);
-        }
-
-        .note-fab.visible {
-            display: flex;
-        }
-
-        .note-fab i {
-            font-size: 1.25rem;
-        }
-
-        .note-fab .note-dot {
-            position: absolute;
-            top: -3px;
-            right: -3px;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #facc15;
-            border: 2px solid #fff;
-            display: none;
-        }
-
-        .note-fab.has-note .note-dot {
-            display: block;
-        }
-
-        .note-fab.has-note {
-            animation: notePulse 1.8s infinite;
-        }
-
-        @keyframes notePulse {
-            0%, 100% { box-shadow: 0 6px 16px rgba(220, 38, 38, 0.35); }
-            50% { box-shadow: 0 6px 24px rgba(220, 38, 38, 0.8); }
-        }
-
-        .note-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 3100;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            transition: opacity 0.25s ease, visibility 0.25s ease;
-        }
-
-        .note-modal.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .note-modal-content {
-            width: 100%;
-            max-width: 560px;
-            max-height: 85vh;
-            max-height: 85dvh;
-            background: #fff;
-            border-radius: 18px 18px 0 0;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        .note-modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            padding: 0.9rem 1.1rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .note-modal-header h4 {
-            font-size: 0.9rem;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .note-modal-header h4 i {
-            color: var(--accent-red);
-        }
-
-        .note-modal .video-close-btn {
-            background: var(--bg-color);
-            color: var(--text-primary);
-        }
-
-        .note-modal .video-close-btn:hover {
-            background: var(--accent-red);
-            color: #fff;
-        }
-
-        .note-modal-body {
-            padding: 1.1rem;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            font-family: 'Cairo', 'Montserrat', sans-serif;
-            font-size: 1.02rem;
-            font-weight: 600;
-            line-height: 1.9;
-            white-space: pre-wrap;
-            word-break: break-word;
-            color: var(--text-primary);
-            text-align: start;
-        }
-
-        .note-modal-body.empty {
-            color: var(--text-secondary);
-            text-align: center;
-            font-size: 0.85rem;
-            white-space: normal;
-        }
-
-        .note-modal-meta {
-            padding: 0.6rem 1.1rem 0.9rem;
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: var(--text-secondary);
-            border-top: 1px solid var(--border-color);
-        }
-
-        @media (min-width: 600px) {
-            .note-modal {
-                align-items: center;
-                padding: 1rem;
-            }
-
-            .note-modal-content {
-                border-radius: 16px;
-            }
-        }
-
-        .info-list {
-            text-align: left;
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 1rem 1.2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.85rem;
-        }
-
-        .info-row:last-child {
-            border-bottom: none;
-        }
-
-        .info-row .info-label {
-            color: var(--text-secondary);
-            font-weight: 700;
-        }
-
-        .info-row .info-value {
-            color: var(--accent-red);
-            font-weight: 800;
-            text-align: right;
-            word-break: break-word;
-        }
-
-        .info-row .info-value.status-active {
-            color: var(--accent-green);
-        }
-
-        /* ================== MOBILE ================== */
-        @media (max-width: 768px) {
-            .login-wrapper {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-        }
-
-        @media (max-width: 520px) {
-            .screen {
-                padding: 1rem;
-                padding-top: max(1rem, env(safe-area-inset-top));
-                padding-bottom: max(1rem, env(safe-area-inset-bottom));
-            }
-
-            .login-card-box {
-                padding: 1.8rem 1.2rem;
-                border-radius: 14px;
-            }
-
-            .login-card-box h1,
-            .welcome-screen-box h1 {
-                font-size: 1.5rem;
-            }
-
-            .logo-badge {
-                width: 60px;
-                height: 60px;
-                font-size: 1.7rem;
-            }
-
-            .welcome-screen-box {
-                padding: 1.6rem 1.2rem;
-            }
-
-            .developer-footer-card {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 1rem 1.1rem;
-                gap: 0.7rem;
-            }
-
-            .dev-info-right {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.6rem;
-            }
-
-            .app-container {
-                padding: 1rem;
-                padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
-            }
-
-            .header {
-                margin-bottom: 1.5rem;
-            }
-
-            .logo-area h2 {
-                font-size: 1.05rem;
-            }
-
-            .visit-counter-badge {
-                font-size: 0.68rem;
-                padding: 0.35rem 0.65rem;
-                max-width: 100%;
-            }
-
-            .nav-back-btn {
-                padding: 0.45rem 0.8rem;
-            }
-
-            .section-title {
-                margin-bottom: 1.4rem;
-            }
-
-            .section-title h3 {
-                font-size: 1.3rem;
-            }
-
-            .program-card {
-                padding: 1rem 1.1rem;
-                gap: 0.9rem;
-            }
-
-            .program-icon {
-                width: 40px;
-                height: 40px;
-            }
-
-            .program-info h4 {
-                font-size: 0.95rem;
-            }
-
-            .categories-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .category-card {
-                padding: 1.1rem 1.2rem;
-            }
-
-            .slots-grid-container {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.7rem;
-            }
-
-            .slot-thumb {
-                height: 100px;
-            }
-
-            .slot-info {
-                padding: 0.6rem 0.5rem;
-            }
-
-            .slot-box .slot-label {
-                font-size: 0.66rem;
-            }
-
-            .certs-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .cert-box {
-                min-height: 150px;
-            }
-
-            .note-textarea {
-                min-height: 220px;
-            }
-
-            .video-modal {
-                padding: 0.6rem;
-                padding-top: max(0.6rem, env(safe-area-inset-top));
-                padding-bottom: max(0.6rem, env(safe-area-inset-bottom));
-            }
-
-            .video-modal-content {
-                border-radius: 12px;
-            }
-
-            .video-modal-header {
-                padding: 0.7rem 0.9rem;
-            }
-
-            .video-modal-nav {
-                padding: 0.7rem 0.9rem;
-            }
-
-            .video-nav-btn {
-                padding: 0.6rem 0.8rem;
-            }
-        }
-
-        @media (hover: none) {
-            .social-btn:hover {
-                transform: none;
-            }
-
-            .slot-box.has-video:hover {
-                transform: none;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZOZKA FIT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+  /* ============ ألوان اللوجو (أحمر + أسود فحمي + فضي معدني) ============ */
+  :root{
+    --red:#b5121b;
+    --red-dark:#7d0c12;
+    --red-glow:rgba(181,18,27,.35);
+    --black:#1a1a1c;
+    --text:#1a1a1c;
+    --muted:#6b6d72;
+    --silver:#e9e9eb;
+    --silver-2:#d3d4d7;
+    --line:#c3c4c8;
+    --panel:#f6f6f7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Cairo',sans-serif;
+    color:var(--text);
+    min-height:100vh;
+    background:
+      repeating-linear-gradient(115deg, rgba(255,255,255,.35) 0 2px, rgba(0,0,0,.015) 2px 6px),
+      linear-gradient(180deg,#efeff0,#d8d9db);
+    overflow-x:hidden;
+  }
+
+  /* شريط أعلى وأسفل الصفحة (زي تصميم الباكدجات) */
+  .bar{position:fixed;left:0;right:0;height:9px;z-index:5;background:linear-gradient(90deg,var(--red) 0 36%,var(--black) 36% 100%)}
+  .bar.top{top:0}
+  .bar.bottom{bottom:0;background:linear-gradient(90deg,var(--black) 0 64%,var(--red) 64% 100%)}
+
+  /* أشكال هندسية في الخلفية (زي الأوكتاجون بتاع اللوجو) */
+  .bg-shape{
+    position:fixed;pointer-events:none;z-index:0;
+    clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%);
+  }
+  .bg-shape.a{width:520px;height:520px;top:-150px;left:-170px;background:linear-gradient(135deg,rgba(181,18,27,.16),transparent 70%)}
+  .bg-shape.b{width:440px;height:440px;bottom:-150px;right:-130px;background:linear-gradient(135deg,rgba(26,26,28,.10),transparent 70%)}
+
+  .wrap{position:relative;z-index:1;max-width:1050px;margin:0 auto;padding:36px 18px 70px}
+
+  /* ============ الهيدر واللوجو ============ */
+  header{text-align:center;margin-bottom:22px}
+  .logo-img{
+    width:230px;max-width:62vw;height:auto;display:none;margin:0 auto;border-radius:16px;
+    box-shadow:0 18px 40px rgba(0,0,0,.28),0 2px 0 rgba(255,255,255,.7) inset;
+    border:1px solid rgba(0,0,0,.12);
+  }
+  /* اسم مكتوب بيظهر لحد ما تحط صورة اللوجو */
+  .brand{font-weight:900;font-size:56px;letter-spacing:4px;line-height:1;direction:ltr}
+  .brand .z1{color:var(--black)}
+  .brand .z2{color:var(--red)}
+  .brand-sub{font-weight:900;letter-spacing:12px;font-size:22px;color:var(--black);margin-top:4px;padding-left:12px}
+
+  /* ============ شريط الخطوات ============ */
+  .steps{display:flex;justify-content:center;align-items:center;gap:10px;margin:26px 0 30px}
+  .dot{
+    width:40px;height:40px;display:grid;place-items:center;font-weight:900;
+    background:var(--silver-2);color:var(--muted);
+    clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%);
+    transition:.3s;
+  }
+  .dot.active{background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff}
+  .dot.done{background:var(--black);color:#fff}
+  .line{width:60px;height:3px;background:var(--silver-2);border-radius:3px;position:relative;overflow:hidden}
+  .line::after{content:"";position:absolute;inset:0;background:var(--red);transform:scaleX(0);transform-origin:right;transition:.4s}
+  .line.on::after{transform:scaleX(1)}
+
+  /* ============ الصفحات ============ */
+  .page{display:none;animation:fade .5s ease}
+  .page.show{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  h2.title{text-align:center;font-size:30px;font-weight:900;margin-bottom:6px}
+  h2.title span{color:var(--red);border-bottom:4px solid var(--red)}
+  p.hint{text-align:center;color:var(--muted);margin-bottom:28px;margin-top:10px}
+
+  /* ============ كروت الباكدجات ============ */
+  .packs{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .pack{
+    position:relative;cursor:pointer;text-align:center;padding:0;
+    border-radius:16px;overflow:hidden;
+    background:linear-gradient(160deg,#ffffff,#e7e7e9);
+    border:2px solid var(--black);
+    border-right:8px solid var(--red);
+    box-shadow:0 10px 26px rgba(0,0,0,.14);
+    transition:.35s;isolation:isolate;
+  }
+  .pack:hover{transform:translateY(-6px);box-shadow:0 18px 38px rgba(0,0,0,.22)}
+  .pack.selected{outline:4px solid var(--red);outline-offset:3px;transform:translateY(-6px);box-shadow:0 20px 44px var(--red-glow)}
+  .pack input{position:absolute;opacity:0;pointer-events:none;top:0;left:0;width:1px;height:1px}
+
+  .pack-art{
+    height:190px;position:relative;display:grid;place-items:center;
+    background:
+      repeating-linear-gradient(115deg, rgba(255,255,255,.12) 0 2px, rgba(0,0,0,.04) 2px 7px),
+      linear-gradient(135deg,#9a9ca1,#eceded 45%,#8a8c91);
+    overflow:hidden;border-bottom:2px solid var(--black);
+  }
+  /* وجوه هندسية حمرا زي اللوجو */
+  .pack-art::before,.pack-art::after{content:"";position:absolute;background:linear-gradient(135deg,var(--red),var(--red-dark))}
+  .pack-art::before{width:170px;height:170px;top:-60px;right:-50px;clip-path:polygon(0 0,100% 0,100% 100%)}
+  .pack-art::after{width:140px;height:140px;bottom:-50px;left:-40px;clip-path:polygon(0 100%,100% 100%,0 0);opacity:.92}
+  .pack-art .big{
+    position:relative;z-index:2;font-size:98px;font-weight:900;line-height:1;color:var(--black);
+    text-shadow:0 3px 0 rgba(255,255,255,.6);
+  }
+  .pack-art .badge{
+    position:absolute;z-index:2;top:12px;left:12px;background:var(--black);color:#fff;
+    font-size:12px;font-weight:700;padding:4px 10px;border-radius:30px;letter-spacing:1px
+  }
+  .pack-body{padding:18px 16px 22px}
+  .pack-body h3{font-size:24px;font-weight:900}
+  .pack-body p{color:var(--muted);font-size:14px;margin-top:4px}
+  .feat{list-style:none;margin:16px 0 0;text-align:right;border-top:1px solid var(--line);padding-top:12px}
+  .feat li{position:relative;padding:6px 40px 6px 0;font-size:14.5px;font-weight:700;color:var(--text);min-height:34px;display:flex;flex-direction:column;justify-content:center}
+  .feat li::before{
+    content:"";position:absolute;right:0;top:50%;transform:translateY(-50%);width:28px;height:28px;background:var(--black);
+    clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)
+  }
+  .feat{counter-reset:f}
+  .feat li{counter-increment:f}
+  .feat li::after{
+    content:counter(f);position:absolute;right:0;top:50%;transform:translateY(-50%);width:28px;height:28px;
+    display:grid;place-items:center;color:#fff;font-size:13px;font-weight:900
+  }
+  .feat li small{display:block;color:var(--red);font-size:12px;font-weight:700;direction:ltr;text-align:right}
+  .feat li.offer{margin-top:8px;padding:10px;text-align:center;align-items:center;font-weight:900;letter-spacing:2px;color:#fff;
+    border-radius:8px;background:linear-gradient(135deg,var(--red),var(--red-dark));border-left:6px solid var(--black)}
+  .feat li.offer::before,.feat li.offer::after{display:none}
+  .check{
+    margin:14px auto 0;width:36px;height:36px;display:grid;place-items:center;
+    background:var(--silver-2);color:transparent;font-weight:900;transition:.3s;
+    clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%);
+  }
+  .pack.selected .check{background:var(--red);color:#fff}
+
+  /* ============ زراير ============ */
+  .actions{display:flex;justify-content:center;gap:14px;margin-top:32px;flex-wrap:wrap}
+  .btn{
+    font-family:inherit;font-size:18px;font-weight:900;cursor:pointer;border:none;
+    padding:14px 44px;color:#fff;border-radius:10px;transition:.3s;
+    background:linear-gradient(135deg,var(--red),var(--red-dark));
+    box-shadow:0 10px 24px var(--red-glow);
+  }
+  .btn:hover{transform:translateY(-3px);box-shadow:0 14px 30px var(--red-glow)}
+  .btn.ghost{background:transparent;border:2px solid var(--black);color:var(--black);box-shadow:none}
+  .btn.ghost:hover{background:var(--black);color:#fff;box-shadow:none}
+  .msg-err{color:var(--red);text-align:center;margin-top:14px;min-height:22px;font-weight:700}
+
+  /* ============ رابط التجربة ============ */
+  .test-box{
+    margin:44px auto 0;max-width:620px;text-align:center;padding:20px;
+    border:2px dashed #9b9ca1;border-radius:14px;background:rgba(255,255,255,.55)
+  }
+  .test-box small{display:block;color:var(--muted);margin-bottom:8px;font-weight:700}
+  .test-box a{color:var(--red);font-weight:900;font-size:18px;text-decoration:none;word-break:break-all;direction:ltr;display:inline-block}
+  .test-box a:hover{text-decoration:underline}
+
+  /* ============ الفورم ============ */
+  .card{
+    max-width:640px;margin:0 auto;padding:30px 26px;border-radius:16px;
+    background:linear-gradient(160deg,#ffffff,#ececee);
+    border:2px solid var(--black);border-right:8px solid var(--red);
+    box-shadow:0 20px 50px rgba(0,0,0,.2);position:relative;overflow:hidden
+  }
+  .chosen{
+    display:inline-flex;align-items:center;gap:8px;margin-bottom:22px;
+    background:var(--black);color:#fff;padding:9px 18px;border-radius:30px;font-weight:700
+  }
+  .chosen b{color:#ff8b92}
+  .field{margin-bottom:20px}
+  .field>label,.field>.lbl{display:block;font-weight:900;margin-bottom:8px;color:var(--black)}
+  input[type=text],input[type=number],textarea{
+    width:100%;font-family:inherit;font-size:16px;color:var(--text);
+    background:#fff;border:2px solid var(--line);border-radius:10px;padding:13px 14px;transition:.25s;outline:none
+  }
+  textarea{min-height:92px;resize:vertical}
+  input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 4px rgba(181,18,27,.15)}
+
+  .choices{display:flex;gap:12px;flex-wrap:wrap}
+  .choice{flex:1;min-width:130px;position:relative}
+  .choice input{position:absolute;opacity:0}
+  .choice span{
+    display:block;text-align:center;padding:13px;border-radius:10px;cursor:pointer;font-weight:700;
+    background:#fff;border:2px solid var(--line);transition:.25s
+  }
+  .choice span:hover{border-color:var(--black)}
+  .choice input:checked+span{background:linear-gradient(135deg,var(--red),var(--red-dark));border-color:var(--red);color:#fff;box-shadow:0 8px 20px var(--red-glow)}
+  #healthBox{display:none;margin-top:12px;animation:fade .4s}
+
+  footer{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:50px;color:var(--black);font-size:13px;font-weight:700;letter-spacing:5px;direction:ltr}
+  footer i{display:block;width:60px;height:3px;background:var(--red)}
+
+  @media(max-width:820px){
+    .packs{grid-template-columns:1fr;max-width:380px;margin:0 auto}
+    .pack-art{height:150px}
+    .pack-art .big{font-size:76px}
+    .brand{font-size:44px}
+  }
+</style>
 </head>
 <body>
+<div class="bar top"></div>
+<div class="bar bottom"></div>
+<div class="bg-shape a"></div>
+<div class="bg-shape b"></div>
 
-    <!-- LOGIN SCREEN -->
-    <div id="login-screen" class="screen">
-        <div class="login-container-wrapper">
+<div class="wrap">
 
-            <div class="login-wrapper">
-                <div class="login-card-box">
-                    <div class="logo-badge">
-                        <i class="fa-solid fa-bolt"></i>
-                    </div>
-                    <h1>ZOZKA FIT</h1>
-                    <p>ELITE ATHLETIC PERFORMANCE</p>
+  <!-- ============ الهيدر (صورة اللوجو) ============ -->
+  <!-- الصورة بتتحط من LOGO_SRC في الـ script تحت، ولحد ما تحطها بيظهر الاسم مكتوب -->
+  <header>
+    <img class="logo-img" id="logoImg" alt="ZOZKA FIT">
+    <div id="logoText">
+      <div class="brand"><span class="z1">ZO</span><span class="z2">ZKA</span></div>
+      <div class="brand-sub">FIT</div>
+    </div>
+  </header>
 
-                    <form id="login-form" class="login-form" autocomplete="off">
-                        <div class="input-group">
-                            <i class="fa-solid fa-user"></i>
-                            <input type="text" id="password-input" class="login-input" placeholder="Enter Access Code" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" required>
-                        </div>
-                        <div id="error-msg" class="error-msg">Invalid Code. Access Denied</div>
-                        <div id="success-msg" class="success-msg"></div>
-                        <button type="submit" class="primary-btn">
-                            <span>ENTER SYSTEM</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                    </form>
-                </div>
+  <!-- ============ شريط الخطوات ============ -->
+  <div class="steps">
+    <div class="dot active" id="d1">1</div>
+    <div class="line" id="l1"></div>
+    <div class="dot" id="d2">2</div>
+  </div>
 
-                <div class="login-card-box social-only-card">
-                    <h3><i class="fa-solid fa-share-nodes"></i> CONNECT & INFO</h3>
-                    <div class="social-links-grid">
-                        <a href="https://www.instagram.com/zozka.fit?rpxt=aTJ2eDNhb2o1MmFr&utm_source=qr==" target="_blank" rel="noopener" class="social-btn">
-                            <i class="fa-brands fa-instagram"></i>
-                            <span>Instagram</span>
-                        </a>
-                        <a href="https://www.facebook.com/share/1LtrBuEK7K/?mibextid=wwXIfr" target="_blank" rel="noopener" class="social-btn">
-                            <i class="fa-brands fa-facebook-f"></i>
-                            <span>Facebook</span>
-                        </a>
-                        <a href="https://www.tiktok.com/@zozka.fit?_r=1&_t=ZS-9AnG9cf00Sm" target="_blank" rel="noopener" class="social-btn">
-                            <i class="fa-brands fa-tiktok"></i>
-                            <span>TikTok</span>
-                        </a>
-                        <a href="https://wa.me/201038255702" target="_blank" rel="noopener" class="social-btn">
-                            <i class="fa-brands fa-whatsapp"></i>
-                            <span>WhatsApp +20 103 8255702</span>
-                        </a>
-                        <!-- لينك الموقع التاني: شيل النقط من SITE_LINK في السكريبت وحط اللينك -->
-                        <a id="site-link-btn" href="#" target="_blank" rel="noopener" class="social-btn">
-                            <i class="fa-solid fa-globe"></i>
-                            <span>Website</span>
-                        </a>
-                        <div id="open-certs-btn" class="social-btn">
-                            <i class="fa-solid fa-award"></i>
-                            <span>Certifications</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <!-- ============ الصفحة 1: الباكدجات ============ -->
+  <section class="page show" id="page1">
+    <h2 class="title">اختار <span>الباكدج</span> بتاعك</h2>
+    <p class="hint">دوس على الباكدج اللي يناسبك وبعدين اضغط التالي</p>
 
-            <div class="developer-footer-card">
-                <div class="dev-info-left">
-                    <i class="fa-solid fa-code"></i>
-                    <span>DEVELOPED BY AHMED RAPI3</span>
-                </div>
-                <div class="dev-info-right">
-                    <a href="mailto:ahmedrapie000@gmail.com" class="dev-contact-item">
-                        <i class="fa-solid fa-envelope"></i>
-                        <span>ahmedrapie000@gmail.com</span>
-                    </a>
-                    <a href="tel:01070373645" class="dev-contact-item">
-                        <i class="fa-solid fa-phone"></i>
-                        <span>01070373645</span>
-                    </a>
-                </div>
-            </div>
+    <div class="packs">
 
+      <label class="pack" data-pack="باكدج شهر">
+        <input type="radio" name="pack" value="باكدج شهر">
+        <div class="pack-art"><span class="badge">PACKAGE</span><div class="big">1</div></div>
+        <div class="pack-body">
+          <h3>باكدج الشهر</h3>
+          <p>ابدأ رحلتك وجرّب النظام</p>
+          <ul class="feat">
+            <li>نظام تدريبي مناسب لهدفك <small>(In Zozka Fit Site)</small></li>
+            <li>نظام غذائي مناسب لاحتياجاتك</li>
+            <li>متابعة أسبوعية</li>
+          </ul>
+          <div class="check">✓</div>
         </div>
-    </div>
+      </label>
 
-    <!-- CERTIFICATIONS SCREEN -->
-    <div id="certs-screen" class="screen hidden" style="flex-direction: column; justify-content: flex-start;">
-        <div style="max-width: 1000px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; flex: 1;">
-
-            <header class="header">
-                <div class="logo-area">
-                    <div class="mini-logo">
-                        <i class="fa-solid fa-award"></i>
-                    </div>
-                    <h2>CERTIFICATIONS</h2>
-                </div>
-                <button id="back-to-login-btn" class="nav-back-btn">
-                    <i class="fa-solid fa-arrow-left"></i>
-                    <span>Back</span>
-                </button>
-            </header>
-
-            <div class="section-title">
-                <h3>PROFESSIONAL CERTIFICATES</h3>
-                <p>Elite training credentials and accreditations</p>
-            </div>
-
-            <!-- الشهادات بتتعمل أوتوماتيك من certImages في السكريبت (6 أماكن) -->
-            <div id="certs-grid" class="certs-grid"></div>
-
+      <label class="pack" data-pack="باكدج شهرين">
+        <input type="radio" name="pack" value="باكدج شهرين">
+        <div class="pack-art"><span class="badge">PACKAGE</span><div class="big">2</div></div>
+        <div class="pack-body">
+          <h3>باكدج الشهرين</h3>
+          <p>وقت كفاية لنتيجة ملحوظة</p>
+          <ul class="feat">
+            <li>نظام تدريبي مناسب لهدفك <small>(In Zozka Fit Site)</small></li>
+            <li>نظام غذائي مناسب لاحتياجاتك</li>
+            <li>متابعة دورية (24 ساعة)</li>
+            <li class="offer">OFFER +</li>
+          </ul>
+          <div class="check">✓</div>
         </div>
-    </div>
+      </label>
 
-    <!-- CLIENT SESSION REPORT SCREEN -->
-    <div id="info-screen" class="screen hidden">
-        <div class="welcome-screen-box">
-            <div class="logo-badge">
-                <i class="fa-solid fa-chart-simple"></i>
-            </div>
-            <h1>SESSION REPORT</h1>
-            <div id="info-list" class="info-list">
-                <div class="info-row">
-                    <span class="info-label">CLIENT</span>
-                    <span id="info-client-name" class="info-value">-</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">STATUS</span>
-                    <span id="info-client-status" class="info-value status-active">ACTIVE</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">SESSIONS USED</span>
-                    <span id="info-client-visits" class="info-value">0</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">REMAINING</span>
-                    <span id="info-client-remaining" class="info-value">0</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">EXTRA ADDED</span>
-                    <span id="info-client-extra" class="info-value">0</span>
-                </div>
-            </div>
-            <button id="info-back-btn" class="primary-btn">
-                <span>BACK</span>
-                <i class="fa-solid fa-arrow-left"></i>
-            </button>
+      <label class="pack" data-pack="باكدج 3 شهور">
+        <input type="radio" name="pack" value="باكدج 3 شهور">
+        <div class="pack-art"><span class="badge">PACKAGE</span><div class="big">3</div></div>
+        <div class="pack-body">
+          <h3>باكدج 3 شهور</h3>
+          <p>تحوّل كامل والتزام أطول</p>
+          <ul class="feat">
+            <li>نظام تدريبي مناسب لهدفك <small>(In Zozka Fit Site)</small></li>
+            <li>نظام غذائي مناسب لاحتياجاتك</li>
+            <li>متابعة دورية (24 ساعة)</li>
+            <li>ضمان وصول لأفضل نتيجة <small>(خلال المدة)</small></li>
+            <li class="offer">OFFER ++</li>
+          </ul>
+          <div class="check">✓</div>
         </div>
+      </label>
+
     </div>
 
-    <!-- COACH NOTE EDITOR (ADMIN ONLY) -->
-    <div id="note-screen" class="screen hidden">
-        <div class="welcome-screen-box note-edit-box">
-            <div class="logo-badge">
-                <i class="fa-solid fa-clipboard-list"></i>
-            </div>
-            <h1>COACH NOTE</h1>
-            <div id="note-edit-client" class="note-edit-client">-</div>
-            <textarea id="note-textarea" class="note-textarea" dir="auto" maxlength="3000" placeholder="Write the workout for this client... / اكتب التمرينة للمشترك هنا"></textarea>
-            <div id="note-edit-status" class="note-status"></div>
-            <button id="note-save-btn" class="primary-btn">
-                <i class="fa-solid fa-floppy-disk"></i>
-                <span>SAVE NOTE</span>
-            </button>
-            <button id="note-clear-btn" class="secondary-btn">
-                <i class="fa-solid fa-trash"></i>
-                <span>DELETE NOTE</span>
-            </button>
-            <button id="note-back-btn" class="secondary-btn">
-                <i class="fa-solid fa-arrow-left"></i>
-                <span>BACK</span>
-            </button>
+    <div class="msg-err" id="err1"></div>
+    <div class="actions">
+      <button class="btn" id="next">التالي ←</button>
+    </div>
+
+    <!-- ============ لينك التجربة ============ -->
+    <!-- لما يجهز اللينك: غيّر قيمة TEST_LINK في الـ script تحت -->
+    <div class="test-box" id="testBox">
+      <small>رابط التجربة</small>
+      <a id="testLink" href="#" target="_blank" rel="noopener">........................</a>
+    </div>
+  </section>
+
+  <!-- ============ الصفحة 2: الفورم ============ -->
+  <section class="page" id="page2">
+    <h2 class="title">بياناتك <span>الشخصية</span></h2>
+    <p class="hint">املا البيانات وهنبعتها مباشرة على الواتساب</p>
+
+    <form class="card" id="form" novalidate>
+      <div class="chosen">الباكدج المختار: <b id="chosenName">—</b></div>
+
+      <div class="field">
+        <label for="name">الاسم</label>
+        <input type="text" id="name" placeholder="اكتب اسمك بالكامل" autocomplete="name">
+      </div>
+
+      <div class="field">
+        <label for="age">السن</label>
+        <input type="number" id="age" min="10" max="90" placeholder="مثال: 25" inputmode="numeric">
+      </div>
+
+      <div class="field">
+        <span class="lbl">الجنس</span>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="gender" value="ذكر"><span>ذكر</span></label>
+          <label class="choice"><input type="radio" name="gender" value="أنثى"><span>أنثى</span></label>
         </div>
-    </div>
+      </div>
 
-    <!-- INTRO / READY SCREEN -->
-    <div id="intro-screen" class="screen hidden">
-        <div class="welcome-screen-box">
-            <div class="logo-badge">
-                <i class="fa-solid fa-fire"></i>
-            </div>
-            <h1>WELCOME BACK</h1>
-            <p id="visit-welcome-text">Loading session info...</p>
-            <button id="ready-btn" class="primary-btn">
-                <span>START TRAINING</span>
-                <i class="fa-solid fa-arrow-right"></i>
-            </button>
+      <div class="field">
+        <label for="goal">الهدف</label>
+        <textarea id="goal" placeholder="اكتب هدفك (تنشيف، تضخيم، خسارة وزن، لياقة...)"></textarea>
+      </div>
+
+      <div class="field">
+        <span class="lbl">الحالة الصحية</span>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="health" value="لا يوجد"><span>لا يوجد</span></label>
+          <label class="choice"><input type="radio" name="health" value="يوجد"><span>يوجد</span></label>
         </div>
-    </div>
-
-    <!-- MAIN APP CONTAINER -->
-    <div id="app-container" class="app-container hidden">
-        <header class="header">
-            <div class="logo-area">
-                <div class="mini-logo">
-                    <i class="fa-solid fa-dumbbell"></i>
-                </div>
-                <h2>ZOZKA FIT</h2>
-            </div>
-
-            <div class="visit-counter-badge" id="counter-badge-container">
-                <i class="fa-solid fa-user-check"></i>
-                <span id="visit-count-display">Visits: 1</span>
-            </div>
-
-            <button id="back-home-btn" class="nav-back-btn hidden">
-                <i class="fa-solid fa-arrow-left"></i>
-                <span>Back</span>
-            </button>
-        </header>
-
-        <section id="programs-view" class="view-section active">
-            <div class="section-title">
-                <h3>CHOOSE YOUR PROGRAM</h3>
-                <p>Select your specialized training framework</p>
-            </div>
-            <div class="programs-grid">
-                <div class="program-card" data-program="classic">
-                    <div class="program-icon"><i class="fa-solid fa-fire"></i></div>
-                    <div class="program-info">
-                        <h4>CLASSIC CYCLE</h4>
-                    </div>
-                    <i class="fa-solid fa-chevron-right"></i>
-                </div>
-
-                <div class="program-card" data-program="arnold">
-                    <div class="program-icon"><i class="fa-solid fa-shield-halved"></i></div>
-                    <div class="program-info">
-                        <h4>ARNOLD SPLIT</h4>
-                    </div>
-                    <i class="fa-solid fa-chevron-right"></i>
-                </div>
-
-                <div class="program-card" data-program="ppl">
-                    <div class="program-icon"><i class="fa-solid fa-bolt-lightning"></i></div>
-                    <div class="program-info">
-                        <h4>PUSH / PULL / LEG</h4>
-                    </div>
-                    <i class="fa-solid fa-chevron-right"></i>
-                </div>
-
-                <div class="program-card" data-program="cardio">
-                    <div class="program-icon"><i class="fa-solid fa-heart-pulse"></i></div>
-                    <div class="program-info">
-                        <h4>CARDIO</h4>
-                    </div>
-                    <i class="fa-solid fa-chevron-right"></i>
-                </div>
-            </div>
-        </section>
-
-        <section id="categories-view" class="view-section">
-            <div class="section-title">
-                <h3 id="selected-program-title">PROGRAM CATEGORIES</h3>
-                <p>Select a category to view workout slots</p>
-            </div>
-            <div id="categories-grid" class="categories-grid"></div>
-        </section>
-
-        <section id="slots-view" class="view-section">
-            <div class="section-title">
-                <h3 id="selected-category-title">EXERCISE SLOTS</h3>
-                <p>Tap an exercise to watch the video</p>
-            </div>
-            <div id="slots-container" class="slots-grid-container"></div>
-        </section>
-    </div>
-
-    <!-- COACH NOTE ICON (CLIENT) -->
-    <button id="note-fab" class="note-fab" aria-label="Coach note">
-        <i class="fa-solid fa-clipboard-list"></i>
-        <span>COACH NOTE</span>
-        <span class="note-dot"></span>
-    </button>
-
-    <!-- COACH NOTE POPUP (CLIENT) -->
-    <div id="note-modal" class="note-modal hidden">
-        <div class="note-modal-content">
-            <div class="note-modal-header">
-                <h4><i class="fa-solid fa-clipboard-list"></i> YOUR COACH NOTE</h4>
-                <button id="note-close-btn" class="video-close-btn" aria-label="Close">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <div id="note-modal-body" class="note-modal-body empty" dir="auto">Loading...</div>
-            <div id="note-modal-meta" class="note-modal-meta"></div>
+        <div id="healthBox">
+          <textarea id="healthText" placeholder="اكتب حالتك الصحية (أمراض، إصابات، حساسية...)"></textarea>
         </div>
-    </div>
-
-    <!-- IMAGE VIEWER (CERTIFICATES) -->
-    <div id="image-modal" class="image-modal hidden">
-        <button id="image-close-btn" class="video-close-btn image-close" aria-label="Close">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-        <img id="image-viewer" alt="">
-    </div>
-
-    <!-- VIDEO MODAL -->
-    <div id="video-modal" class="video-modal hidden">
-        <div class="video-modal-content">
-            <div class="video-modal-header">
-                <h4 id="video-modal-title">EXERCISE</h4>
-                <button id="video-close-btn" class="video-close-btn" aria-label="Close">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <video id="video-player" playsinline muted loop controls></video>
-            <div class="video-modal-nav">
-                <button id="video-prev-btn" class="video-nav-btn">
-                    <i class="fa-solid fa-chevron-left"></i>
-                    <span>PREV</span>
-                </button>
-                <span id="video-counter" class="video-counter">1 / 15</span>
-                <button id="video-next-btn" class="video-nav-btn">
-                    <span>NEXT</span>
-                    <i class="fa-solid fa-chevron-right"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // ================== لينك الموقع التاني ==================
-        // شيل النقط وحط اللينك مكانها، مثال: "https://example.com"
-        const SITE_LINK = "https://web-dev-ms.github.io/Package-ZOZKA-FIT/";
-
-        // ================== قاعدة بيانات النوت (Firebase) ==================
-        // النوت لازم تتخزن أونلاين عشان الكابتن يكتبها من جهازه والمشترك يشوفها على تليفونه
-        const FIREBASE_URL = "https://smashgymapplication-6f9125b2-default-rtdb.firebaseio.com";
-        const NOTES_PATH = "zozka_notes";
-
-        // ================== صور الشهادات (6 أماكن) ==================
-        // امسح النقط وحط اسم الصورة (أو لينكها) مكانها، مثال: "cert1.jpg"
-        const certImages = [
-            "Screenshot 2026-10-26 004413.png",
-            "WhatsApp Image 2026-10-25 at 4.45.32 PM.jpeg",
-            "WhatsApp Image 2026-10-25 at 4.45.40 PM.jpeg",
-            "WhatsApp Image 2026-10-25 at 4.45.46 PM.jpeg",
-            "WhatsApp Image 2026-10-25 at 4.46.00 PM.jpeg",
-            "WhatsApp Image 2026-10-25 at 4.46.15 PM.jpeg"
-        ];
-
-        // ================== PROGRAMS ==================
-        const programsData = {
-            classic: {
-                title: "CLASSIC CYCLE",
-                categories: [
-                    { id: "chest", name: "Chest", slots: 15 },
-                    { id: "back", name: "Back", slots: 15 },
-                    { id: "arms", name: "Arms", slots: 15 },
-                    { id: "shoulders", name: "Shoulders", slots: 15 },
-                    { id: "legs", name: "Legs", slots: 15 }
-                ]
-            },
-            arnold: {
-                title: "ARNOLD SPLIT",
-                categories: [
-                    { id: "chest_BACK", name: "ChEST-BACK ", slots: 15 },
-                    { id: "SHOULDERS- ARMS", name: "SHOULDERS- ARMS", slots: 15 },
-                    { id: "LEGS_ABS ", name: "LEGS-ABS ", slots: 15 },
-                    { id: "ZZ", name: "ZZ", slots: 15 }
-                ]
-            },
-            ppl: {
-                title: "PUSH / PULL / LEG",
-                categories: [
-                    { id: "push", name: "Push", slots: 15 },
-                    { id: "pull", name: "Pull", slots: 15 },
-                    { id: "leg", name: "Leg", slots: 15 }
-                ]
-            },
-            cardio: {
-                title: "CARDIO",
-                categories: [
-                    { id: "cardio", name: "Cardio", slots: 15 }
-                ]
-            }
-        };
-
-        const exerciseNames = {
-            chest: [
-                "Incline Barbell Press"
-            ],
-            cardio: [
-            ]
-        };
-
-        // ================== 195 VIDEO PATHS ==================
-        const videoPaths = {
-            1: "WhatsApp Video 2026-09-29 at 2.47.46 PM.mp4",
-            2: "WhatsApp Video 2026-09-30 at 1.28.01 AM.mp4",
-            3: "WhatsApp Video 2026-09-30 at 1.44.09 AM.mp4",
-            4: "WhatsApp Video 2026-09-30 at 1.49.45 AM.mp4",
-            5: "WhatsApp Video 2026-09-30 at 1.54.29 AM.mp4",
-            6: "WhatsApp Video 2026-10-15 at 6.39.15 PM.mp4",
-            7: "WhatsApp Video 2026-10-15 at 6.39.15 PM.mp4",
-            8: "WhatsApp Video 2026-10-15 at 6.41.59 PM.mp4",
-            9: "WhatsApp Video 2026-10-21 at 11.37.31 PM.mp4",
-            10: "WhatsApp Video 2026-10-21 at 11.36.28 PM.mp4",
-            11: "WhatsApp Video 2026-10-22 at 2.52.25 PM.mp4",
-            12: "WhatsApp Video 2026-10-22 at 2.52.25 PM (1).mp4",
-            13: "........................................................",
-            14: "........................................................",
-            15: "........................................................",
-            16: "WhatsApp Video 2026-09-30 at 2.14.10 AM.mp4",
-            17: "WhatsApp Video 2026-09-30 at 2.18.39 AM.mp4",
-            18: "WhatsApp Video 2026-10-15 at 6.51.06 PM.mp4",
-            19: "WhatsApp Video 2026-10-15 at 6.51.26 PM.mp4",
-            20: "WhatsApp Video 2026-10-15 at 6.52.32 PM.mp4",
-            21: "WhatsApp Video 2026-10-15 at 6.52.52 PM.mp4",
-            22: "WhatsApp Video 2026-10-23 at 1.57.09 PM.mp4",
-            23: "WhatsApp Video 2026-10-23 at 1.57.06 PM.mp4",
-            24: "WhatsApp Video 2026-10-15 at 6.57.19 PM.mp4",
-            25: "WhatsApp Video 2026-10-15 at 6.57.44 PM.mp4",
-            26: "WhatsApp Video 2026-10-15 at 7.01.57 PM.mp4",
-            27: "WhatsApp Video 2026-10-15 at 7.02.36 PM.mp4",
-            28: "WhatsApp Video 2026-10-15 at 7.02.17 PM.mp4",
-            29: "WhatsApp Video 2026-10-15 at 7.03.04 PM.mp4",
-            30: "WhatsApp Video 2026-10-21 at 11.38.24 PM.mp4",
-            31: "WhatsApp Video 2026-10-15 at 7.17.46 PM.mp4",
-            32: "WhatsApp Video 2026-10-15 at 7.18.06 PM.mp4",
-            33: "WhatsApp Video 2026-10-15 at 7.18.36 PM.mp4",
-            34: "WhatsApp Video 2026-10-15 at 7.19.06 PM.mp4",
-            35: "WhatsApp Video 2026-10-15 at 7.19.30 PM.mp4",
-            36: "WhatsApp Video 2026-10-15 at 7.19.53 PM.mp4",
-            37: "WhatsApp Video 2026-10-15 at 7.21.42 PM.mp4",
-            38: "WhatsApp Video 2026-10-15 at 7.23.55 PM.mp4",
-            39: "WhatsApp Video 2026-10-15 at 7.20.17 PM.mp4",
-            40: "WhatsApp Video 2026-10-15 at 7.22.05 PM.mp4",
-            41: "WhatsApp Video 2026-10-15 at 7.20.38 PM.mp4",
-            42: "WhatsApp Video 2026-10-23 at 1.57.55 PM.mp4",
-            43: "WhatsApp Video 2026-10-15 at 7.22.27 PM.mp4",
-            44: "WhatsApp Video 2026-10-15 at 7.24.15 PM.mp4",
-            45: "........................................................",
-            46: "WhatsApp Video 2026-10-22 at 3.19.14 PM (1).mp4",
-            47: "WhatsApp Video 2026-10-22 at 3.19.14 PM.mp4",
-            48: "WhatsApp Video 2026-10-21 at 11.41.49 PM.mp4",
-            49: "WhatsApp Video 2026-10-21 at 11.41.53 PM.mp4",
-            50: "WhatsApp Video 2026-10-21 at 11.46.31 PM.mp4",
-            51: "WhatsApp Video 2026-10-21 at 11.46.34 PM.mp4",
-            52: "WhatsApp Video 2026-10-21 at 11.46.40 PM.mp4",
-            53: "WhatsApp Video 2026-10-21 at 11.46.40 PM.mp4",
-            54: "WhatsApp Video 2026-10-21 at 11.46.44 PM.mp4",
-            55: "WhatsApp Video 2026-10-21 at 11.46.49 PM.mp4",
-            56: "WhatsApp Video 2026-10-21 at 11.46.54 PM.mp4",
-            57: "........................................................",
-            58: "........................................................",
-            59: "........................................................",
-            60: "........................................................",
-            61: "WhatsApp Video 2026-10-22 at 12.02.23 AM.mp4",
-            62: "WhatsApp Video 2026-10-22 at 12.02.29 AM.mp4",
-            63: "WhatsApp Video 2026-10-22 at 12.02.39 AM.mp4",
-            64: "WhatsApp Video 2026-10-22 at 12.02.34 AM.mp4",
-            65: "WhatsApp Video 2026-10-22 at 12.03.13 AM.mp4",
-            66: "WhatsApp Video 2026-10-22 at 12.02.52 AM.mp4",
-            67: "WhatsApp Video 2026-10-22 at 12.02.47 AM.mp4",
-            68: "WhatsApp Video 2026-10-22 at 12.03.58 AM.mp4",
-            69: "WhatsApp Video 2026-10-22 at 12.02.58 AM.mp4",
-            70: "WhatsApp Video 2026-10-22 at 12.07.45 AM.mp4",
-            71: "WhatsApp Video 2026-10-22 at 12.04.54 AM.mp4",
-            72: "WhatsApp Video 2026-10-22 at 12.03.05 AM.mp4",
-            73: "WhatsApp Video 2026-10-22 at 12.03.05 AM.mp4",
-            74: "WhatsApp Video 2026-10-22 at 12.05.09 AM.mp4",
-            75: "........................................................",
-            76: "WhatsApp Video 2026-09-30 at 1.44.09 AM.mp4",
-            77: "WhatsApp Video 2026-10-22 at 2.52.25 PM (1).mp4",
-            78: "WhatsApp Video 2026-09-30 at 1.54.29 AM.mp4",
-            79: "WhatsApp Video 2026-10-15 at 6.52.32 PM.mp4",
-            80: "WhatsApp Video 2026-10-15 at 6.51.06 PM.mp4",
-            81: "WhatsApp Video 2026-09-30 at 2.14.10 AM.mp4",
-            82: "........................................................",
-            83: "........................................................",
-            84: "........................................................",
-            85: "........................................................",
-            86: "........................................................",
-            87: "........................................................",
-            88: "........................................................",
-            89: "........................................................",
-            90: "........................................................",
-            91: "WhatsApp Video 2026-10-22 at 3.19.14 PM.mp4",
-            92: "WhatsApp Video 2026-10-21 at 11.46.34 PM.mp4",
-            93: "WhatsApp Video 2026-10-21 at 11.46.44 PM.mp4",
-            94: "WhatsApp Video 2026-10-15 at 7.21.07 PM.mp4",
-            95: "WhatsApp Video 2026-10-15 at 7.20.38 PM.mp4",
-            96: "WhatsApp Video 2026-10-15 at 7.19.30 PM.mp4",
-            97: "WhatsApp Video 2026-10-15 at 7.21.42 PM.mp4",
-            98: "WhatsApp Video 2026-10-21 at 11.46.49 PM.mp4",
-            99: "WhatsApp Video 2026-10-21 at 11.46.40 PM.mp4",
-            100: "WhatsApp Video 2026-10-21 at 11.41.53 PM.mp4",
-            101: "........................................................",
-            102: "........................................................",
-            103: "........................................................",
-            104: "........................................................",
-            105: "........................................................",
-            106: "WhatsApp Video 2026-10-22 at 12.02.23 AM.mp4",
-            107: "WhatsApp Video 2026-10-22 at 12.02.29 AM.mp4",
-            108: "WhatsApp Video 2026-10-22 at 12.02.39 AM.mp4",
-            109: "WhatsApp Video 2026-10-22 at 12.02.47 AM.mp4",
-            110: "WhatsApp Video 2026-10-22 at 12.04.54 AM.mp4",
-            111: "WhatsApp Video 2026-10-22 at 12.03.58 AM.mp4",
-            112: "WhatsApp Video 2026-10-22 at 12.07.45 AM.mp4",
-            113: "WhatsApp Video 2026-10-22 at 12.03.05 AM.mp4",
-            114: "WhatsApp Video 2026-10-22 at 12.59.53 AM.mp4",
-            115: "WhatsApp Video 2026-10-22 at 1.00.26 AM.mp4",
-            116: "WhatsApp Video 2026-10-22 at 1.00.55 AM.mp4",
-            117: "WhatsApp Video 2026-10-22 at 1.01.50 AM.mp4",
-            118: "........................................................",
-            119: "........................................................",
-            120: "........................................................",
-            121: "........................................................",
-            122: "........................................................",
-            123: "........................................................",
-            124: "........................................................",
-            125: "........................................................",
-            126: "........................................................",
-            127: "........................................................",
-            128: "........................................................",
-            129: "........................................................",
-            130: "........................................................",
-            131: "........................................................",
-            132: "........................................................",
-            133: "........................................................",
-            134: "........................................................",
-            135: "........................................................",
-            136: "WhatsApp Video 2026-09-30 at 1.49.45 AM.mp4",
-            137: "WhatsApp Video 2026-10-22 at 2.52.25 PM.mp4",
-            138: "WhatsApp Video 2026-10-21 at 11.41.53 PM.mp4",
-            139: "WhatsApp Video 2026-10-21 at 11.35.49 PM.mp4",
-            140: "WhatsApp Video 2026-10-15 at 7.20.17 PM.mp4",
-            141: "WhatsApp Video 2026-10-15 at 7.22.05 PM.mp4",
-            142: "WhatsApp Video 2026-10-21 at 11.46.34 PM.mp4",
-            143: "WhatsApp Video 2026-10-21 at 11.40.06 PM.mp4",
-            144: "........................................................",
-            145: "........................................................",
-            146: "........................................................",
-            147: "........................................................",
-            148: "........................................................",
-            149: "........................................................",
-            150: "........................................................",
-            151: "WhatsApp Video 2026-09-30 at 2.14.10 AM.mp4",
-            152: "WhatsApp Video 2026-10-21 at 11.41.53 PM.mp4",
-            153: "WhatsApp Video 2026-10-15 at 6.52.52 PM.mp4",
-            154: "WhatsApp Video 2026-10-15 at 6.57.44 PM.mp4",
-            155: "WhatsApp Video 2026-10-21 at 11.38.24 PM.mp4",
-            156: "WhatsApp Video 2026-10-15 at 7.03.04 PM.mp4",
-            157: "WhatsApp Video 2026-10-15 at 7.17.46 PM.mp4",
-            158: "WhatsApp Video 2026-10-15 at 7.23.55 PM.mp4",
-            159: "WhatsApp Video 2026-10-21 at 11.46.44 PM.mp4",
-            160: "........................................................",
-            161: "........................................................",
-            162: "........................................................",
-            163: "........................................................",
-            164: "........................................................",
-            165: "........................................................",
-            166: "WhatsApp Video 2026-10-22 at 12.02.23 AM.mp4",
-            167: "WhatsApp Video 2026-10-22 at 12.02.29 AM.mp4",
-            168: "WhatsApp Video 2026-10-22 at 12.02.52 AM.mp4",
-            169: "WhatsApp Video 2026-10-22 at 12.02.39 AM.mp4",
-            170: "WhatsApp Video 2026-10-22 at 12.03.58 AM.mp4",
-            171: "WhatsApp Video 2026-10-22 at 12.02.58 AM.mp4",
-            172: "WhatsApp Video 2026-10-22 at 12.03.05 AM.mp4",
-            173: "........................................................",
-            174: "........................................................",
-            175: "........................................................",
-            176: "........................................................",
-            177: "........................................................",
-            178: "........................................................",
-            179: "........................................................",
-            180: "........................................................",
-            181: "WhatsApp Video 2026-10-22 at 1.28.54 AM.mp4",
-            182: "WhatsApp Video 2026-10-22 at 1.33.11 AM.mp4",
-            183: "WhatsApp Video 2026-10-22 at 1.28.43 AM.mp4",
-            184: "WhatsApp Video 2026-10-22 at 1.28.49 AM.mp4",
-            185: "WhatsApp Video 2026-10-22 at 1.27.50 AM.mp4",
-            186: "WhatsApp Video 2026-10-22 at 1.32.37 AM.mp4",
-            187: "WhatsApp Video 2026-10-22 at 1.32.52 AM.mp4",
-            188: "WhatsApp Video 2026-10-22 at 1.32.56 AM.mp4",
-            189: "WhatsApp Video 2026-10-22 at 1.33.02 AM.mp4",
-            190: "WhatsApp Video 2026-10-22 at 1.32.48 AM.mp4",
-            191: "WhatsApp Video 2026-10-23 at 2.13.22 PM.mp4",
-            192: "WhatsApp Video 2026-10-23 at 2.13.38 PM.mp4",
-            193: "WhatsApp Video 2026-10-22 at 1.00.26 AM.mp4",
-            194: "WhatsApp Video 2026-10-22 at 1.01.50 AM.mp4",
-            195: "WhatsApp Video 2026-10-22 at 1.33.06 AM.mp4",
-        };
-
-        // ================== ACCOUNTS ==================
-        const developers = ["RAPI3", "ZOZKAFITT1"];
-
-        const allowedClients = [
-            "SARAA",
-            "ZOZKA FIT A-11",
-            "ZOZKA FIT A-33",
-            "ZOZKA FIT B-12",
-            "ZOZKA FIT B-52",
-            "ZOZKA FIT C-6",
-            "ZOZKA FIT C-14",
-            "ZOZKA FIT D-15",
-            "ZOZKA FIT D-13",
-            "ZOZKA FIT F-7",
-            "ZOZKA FIT F-9",
-            "ZOZKA FIT E-18",
-            "ZOZKA FIT E-55",
-            "ZOZKA FIT E-23",
-            "ZOZKA FIT B-82",
-            "ZOZKA FIT C-88",
-            "ZOZKA FIT A-24",
-            "ZOZKA FIT A-77",
-            "ZOZKA FIT A-99",
-            "ZOZKA FIT B-10",
-            "ZOZKA FIT B-34",
-            "ZOZKA FIT B-67",
-            "ZOZKA FIT C-12",
-            "ZOZKA FIT C-29",
-            "ZOZKA FIT C-45",
-            "ZOZKA FIT D-11",
-            "ZOZKA FIT D-40",
-            "ZOZKA FIT D-88",
-            "ZOZKA FIT E-14",
-            "ZOZKA FIT E-30",
-            "ZOZKA FIT E-71",
-            "ZOZKA FIT F-15",
-            "ZOZKA FIT F-22",
-            "ZOZKA FIT F-88",
-            "ZOZKA FIT G-19",
-            "ZOZKA FIT G-44",
-            "ZOZKA FIT G-73",
-            "ZOZKA FIT H-12",
-            "ZOZKA FIT H-50",
-            "ZOZKA FIT H-95",
-            "ZOZKA FIT K-21",
-            "ZOZKA FIT K-36",
-            "ZOZKA FIT K-65",
-            "ZOZKA FIT L-18",
-            "ZOZKA FIT L-42",
-            "ZOZKA FIT L-90",
-            "ZOZKA FIT M-13",
-            "ZOZKA FIT M-55",
-            "ZOZKA FIT M-81",
-            "ZOZKA FIT X-99",
-            "ZOZKA FIT Z-50"
-        ];
-
-        // عدد الجلسات الأساسي لكل مشترك
-        const SESSION_LIMIT = 25;
-
-        // كلمات الريست المقبولة
-        const RESET_WORDS = ["REST", "RESET"];
-
-        // أقصى عدد جلسات الماستر يقدر يزودها في أمر واحد
-        const MAX_ADD = 100;
-
-        let currentProgramKey = null;
-        let currentClientCode = null;   // كود المشترك اللي دخل حالياً (للنوت)
-
-        // ================== ELEMENTS ==================
-        const loginScreen = document.getElementById('login-screen');
-        const loginForm = document.getElementById('login-form');
-        const passwordInput = document.getElementById('password-input');
-        const errorMsg = document.getElementById('error-msg');
-        const successMsg = document.getElementById('success-msg');
-
-        const siteLinkBtn = document.getElementById('site-link-btn');
-
-        const certsScreen = document.getElementById('certs-screen');
-        const openCertsBtn = document.getElementById('open-certs-btn');
-        const backToLoginBtn = document.getElementById('back-to-login-btn');
-
-        const infoScreen = document.getElementById('info-screen');
-        const infoClientName = document.getElementById('info-client-name');
-        const infoClientStatus = document.getElementById('info-client-status');
-        const infoClientVisits = document.getElementById('info-client-visits');
-        const infoClientRemaining = document.getElementById('info-client-remaining');
-        const infoClientExtra = document.getElementById('info-client-extra');
-        const infoBackBtn = document.getElementById('info-back-btn');
-
-        const noteScreen = document.getElementById('note-screen');
-        const noteEditClient = document.getElementById('note-edit-client');
-        const noteTextarea = document.getElementById('note-textarea');
-        const noteEditStatus = document.getElementById('note-edit-status');
-        const noteSaveBtn = document.getElementById('note-save-btn');
-        const noteClearBtn = document.getElementById('note-clear-btn');
-        const noteBackBtn = document.getElementById('note-back-btn');
-
-        const noteFab = document.getElementById('note-fab');
-        const noteModal = document.getElementById('note-modal');
-        const noteModalBody = document.getElementById('note-modal-body');
-        const noteModalMeta = document.getElementById('note-modal-meta');
-        const noteCloseBtn = document.getElementById('note-close-btn');
-
-        const imageModal = document.getElementById('image-modal');
-        const imageViewer = document.getElementById('image-viewer');
-        const imageCloseBtn = document.getElementById('image-close-btn');
-
-        const introScreen = document.getElementById('intro-screen');
-        const readyBtn = document.getElementById('ready-btn');
-        const visitWelcomeText = document.getElementById('visit-welcome-text');
-
-        const appContainer = document.getElementById('app-container');
-        const backHomeBtn = document.getElementById('back-home-btn');
-        const visitCountDisplay = document.getElementById('visit-count-display');
-        const counterBadgeContainer = document.getElementById('counter-badge-container');
-
-        const programsView = document.getElementById('programs-view');
-        const categoriesView = document.getElementById('categories-view');
-        const slotsView = document.getElementById('slots-view');
-
-        const categoriesGrid = document.getElementById('categories-grid');
-        const slotsContainer = document.getElementById('slots-container');
-        const selectedProgramTitle = document.getElementById('selected-program-title');
-        const selectedCategoryTitle = document.getElementById('selected-category-title');
-
-        const videoModal = document.getElementById('video-modal');
-        const videoPlayer = document.getElementById('video-player');
-        const videoModalTitle = document.getElementById('video-modal-title');
-        const videoCloseBtn = document.getElementById('video-close-btn');
-        const videoPrevBtn = document.getElementById('video-prev-btn');
-        const videoNextBtn = document.getElementById('video-next-btn');
-        const videoCounter = document.getElementById('video-counter');
-
-        // ================== لينك الموقع ==================
-        if (SITE_LINK && !SITE_LINK.includes('...')) {
-            siteLinkBtn.href = SITE_LINK;
-        } else {
-            siteLinkBtn.addEventListener('click', (e) => e.preventDefault());
-        }
-
-        openCertsBtn.addEventListener('click', () => {
-            loginScreen.classList.add('hidden');
-            certsScreen.classList.remove('hidden');
-        });
-
-        backToLoginBtn.addEventListener('click', () => {
-            certsScreen.classList.add('hidden');
-            loginScreen.classList.remove('hidden');
-        });
-
-        infoBackBtn.addEventListener('click', () => {
-            infoScreen.classList.add('hidden');
-            loginScreen.classList.remove('hidden');
-        });
-
-        // ================== الشهادات (6 أماكن) ==================
-        function renderCerts() {
-            const grid = document.getElementById('certs-grid');
-            grid.innerHTML = '';
-
-            certImages.forEach((src, i) => {
-                const label = `CERTIFICATE #${pad2(i + 1)}`;
-                const box = document.createElement('div');
-
-                const showPlaceholder = () => {
-                    box.className = 'cert-box';
-                    box.innerHTML = `<i class="fa-solid fa-image"></i><span>${label}</span>`;
-                    box.onclick = null;
-                };
-
-                showPlaceholder();
-
-                if (src && !src.includes('...')) {
-                    const img = new Image();
-                    img.alt = label;
-                    img.onload = () => {
-                        box.className = 'cert-box has-img';
-                        box.innerHTML = '';
-                        box.appendChild(img);
-                        box.onclick = () => openImage(src, label);
-                    };
-                    img.onerror = showPlaceholder;
-                    img.src = src;
-                }
-
-                grid.appendChild(box);
-            });
-        }
-
-        function openImage(src, label) {
-            imageViewer.src = src;
-            imageViewer.alt = label;
-            imageModal.classList.remove('hidden');
-        }
-
-        function closeImage() {
-            imageModal.classList.add('hidden');
-            imageViewer.removeAttribute('src');
-        }
-
-        imageModal.addEventListener('click', closeImage);
-        imageCloseBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            closeImage();
-        });
-
-        // ================== رسائل الخطأ والنجاح ==================
-        function showError(text) {
-            successMsg.style.display = 'none';
-            errorMsg.innerHTML = text;
-            errorMsg.style.display = 'block';
-        }
-
-        function showSuccess(text) {
-            errorMsg.style.display = 'none';
-            successMsg.innerHTML = text;
-            successMsg.style.display = 'block';
-        }
-
-        function hideMessages() {
-            errorMsg.style.display = 'none';
-            successMsg.style.display = 'none';
-        }
-
-        // ================== قفل / فتح الحساب (يدوي) ==================
-        function isLocked(code) {
-            return localStorage.getItem(`locked_${code}`) === '1';
-        }
-
-        function setLocked(code, locked) {
-            if (locked) {
-                localStorage.setItem(`locked_${code}`, '1');
-            } else {
-                localStorage.removeItem(`locked_${code}`);
-            }
-        }
-
-        // "RAPI3 SARAA RAPI3" -> قفل/فتح يدوي
-        function parseToggleCommand(raw) {
-            for (const startDev of developers) {
-                if (!raw.startsWith(startDev + ' ')) continue;
-                for (const endDev of developers) {
-                    if (!raw.endsWith(' ' + endDev)) continue;
-                    if (raw.length <= startDev.length + endDev.length + 2) continue;
-                    const middle = raw.slice(startDev.length + 1, raw.length - endDev.length - 1).trim();
-                    if (allowedClients.includes(middle)) {
-                        return middle;
-                    }
-                }
-            }
-            return null;
-        }
-
-        // أوامر الماستر على الجلسات:
-        //   (كود المشترك) (كود الماستر) REST   -> ريست: يفتح الحساب ويبدأ 25 جلسة جديدة
-        //   (كود المشترك) (كود الماستر) 5      -> يزود 5 جلسات (أو 10 أو أي رقم)
-        function parseSessionCommand(raw) {
-            const tokens = raw.split(' ');
-            if (tokens.length < 3) return null;
-
-            const action = tokens[tokens.length - 1];
-            const master = tokens[tokens.length - 2];
-            const client = tokens.slice(0, -2).join(' ');
-
-            if (!developers.includes(master)) return null;
-            if (!allowedClients.includes(client)) return null;
-
-            if (RESET_WORDS.includes(action)) {
-                return { client, type: 'reset' };
-            }
-
-            if (/^\d+$/.test(action)) {
-                const amount = parseInt(action, 10);
-                if (amount >= 1 && amount <= MAX_ADD) {
-                    return { client, type: 'add', amount };
-                }
-            }
-            return null;
-        }
-
-        // أمر النوت: (كود المشترك) (كود الماستر) NOTE   مثال: SARAA RAPI3 NOTE
-        function parseNoteCommand(raw) {
-            const tokens = raw.split(' ');
-            if (tokens.length < 3) return null;
-            if (tokens[tokens.length - 1] !== 'NOTE') return null;
-
-            const master = tokens[tokens.length - 2];
-            const client = tokens.slice(0, -2).join(' ');
-
-            if (!developers.includes(master)) return null;
-            if (!allowedClients.includes(client)) return null;
-
-            return { client };
-        }
-
-        // ================== عداد الجلسات ==================
-        function getVisits(code) {
-            return parseInt(localStorage.getItem(`visits_${code}`) || '0', 10);
-        }
-
-        function getBonus(code) {
-            return parseInt(localStorage.getItem(`bonus_${code}`) || '0', 10);
-        }
-
-        function getAllowed(code) {
-            return SESSION_LIMIT + getBonus(code);
-        }
-
-        function isExhausted(code) {
-            return getVisits(code) >= getAllowed(code);
-        }
-
-        function resetClient(code) {
-            localStorage.setItem(`visits_${code}`, 0);
-            localStorage.removeItem(`bonus_${code}`);
-            setLocked(code, false);
-        }
-
-        function addSessions(code, amount) {
-            localStorage.setItem(`bonus_${code}`, getBonus(code) + amount);
-        }
-
-        function loginAsAdmin(code) {
-            hideMessages();
-            currentClientCode = null;
-            noteFab.classList.remove('visible', 'has-note');
-            counterBadgeContainer.style.display = 'none';
-            visitWelcomeText.textContent = `WELCOME BACK ENGINEER (${code}) - ADMIN MODE`;
-
-            loginScreen.classList.add('hidden');
-            introScreen.classList.remove('hidden');
-            passwordInput.value = '';
-        }
-
-        function loginAsClient(code) {
-            hideMessages();
-
-            currentClientCode = code;
-            noteFab.classList.remove('visible', 'has-note');
-
-            const used = getVisits(code) + 1;
-            localStorage.setItem(`visits_${code}`, used);
-
-            const allowed = getAllowed(code);
-
-            counterBadgeContainer.style.display = 'flex';
-            visitCountDisplay.textContent = `${code}: #${used}/${allowed}`;
-
-            let msg = `WELCOME BACK ${code}! THIS IS YOUR SESSION #${used} OF ${allowed}`;
-            if (used >= allowed) {
-                msg += ' - THIS IS YOUR LAST SESSION! THE ACCOUNT WILL BE LOCKED AFTER IT';
-            }
-            visitWelcomeText.textContent = msg;
-
-            loginScreen.classList.add('hidden');
-            introScreen.classList.remove('hidden');
-            passwordInput.value = '';
-        }
-
-        function showClientReport(code) {
-            hideMessages();
-
-            const used = getVisits(code);
-            const allowed = getAllowed(code);
-            const remaining = Math.max(0, allowed - used);
-            const locked = isLocked(code);
-            const finished = isExhausted(code);
-
-            infoClientName.textContent = code;
-            infoClientStatus.textContent = locked ? 'LOCKED' : (finished ? 'FINISHED - LOCKED' : 'ACTIVE');
-            infoClientStatus.classList.toggle('status-active', !locked && !finished);
-            infoClientVisits.textContent = `${used} / ${allowed}`;
-            infoClientRemaining.textContent = remaining;
-            infoClientExtra.textContent = getBonus(code);
-
-            loginScreen.classList.add('hidden');
-            infoScreen.classList.remove('hidden');
-            passwordInput.value = '';
-        }
-
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            hideMessages();
-            const rawInput = passwordInput.value.trim().toUpperCase().replace(/\s+/g, ' ');
-
-            // الحالة N: كتابة / تعديل نوت لمشترك  (SARAA RAPI3 NOTE)
-            const noteCmd = parseNoteCommand(rawInput);
-            if (noteCmd) {
-                openNoteEditor(noteCmd.client);
-                return;
-            }
-
-            // الحالة A: ريست أو زيادة جلسات
-            const sessionCmd = parseSessionCommand(rawInput);
-            if (sessionCmd) {
-                if (sessionCmd.type === 'reset') {
-                    resetClient(sessionCmd.client);
-                    showSuccess(
-                        `ACCOUNT ${sessionCmd.client} HAS BEEN RESET 🔓<br>` +
-                        `NEW ${SESSION_LIMIT} SESSIONS STARTED<br>` +
-                        `تم فتح الحساب وبدأ ${SESSION_LIMIT} جلسة جديدة`
-                    );
-                } else {
-                    addSessions(sessionCmd.client, sessionCmd.amount);
-                    const remaining = Math.max(0, getAllowed(sessionCmd.client) - getVisits(sessionCmd.client));
-                    showSuccess(
-                        `ADDED ${sessionCmd.amount} SESSIONS TO ${sessionCmd.client} ✅<br>` +
-                        `REMAINING: ${remaining}<br>` +
-                        `تم زيادة ${sessionCmd.amount} جلسات - المتبقي ${remaining}`
-                    );
-                }
-                passwordInput.value = '';
-                return;
-            }
-
-            // الحالة 0: قفل / فتح حساب مشترك
-            const toggleTarget = parseToggleCommand(rawInput);
-            if (toggleTarget) {
-                const nowLocked = !isLocked(toggleTarget);
-                setLocked(toggleTarget, nowLocked);
-                showSuccess(
-                    nowLocked
-                        ? `ACCOUNT ${toggleTarget} HAS BEEN LOCKED 🔒<br>تم قفل الحساب`
-                        : `ACCOUNT ${toggleTarget} HAS BEEN REOPENED 🔓<br>تم فتح الحساب`
-                );
-                passwordInput.value = '';
-                return;
-            }
-
-            // الحالة 1: تقرير الجلسات "RAPI3 ZOZKA FIT B-52"
-            const firstSpaceIndex = rawInput.indexOf(' ');
-            if (firstSpaceIndex > -1) {
-                const possibleDevCode = rawInput.substring(0, firstSpaceIndex);
-                const possibleClientCode = rawInput.substring(firstSpaceIndex + 1).trim();
-
-                if (developers.includes(possibleDevCode) && allowedClients.includes(possibleClientCode)) {
-                    showClientReport(possibleClientCode);
-                    return;
-                }
-            }
-
-            // الحالة 2: كود ماستر لوحده
-            if (developers.includes(rawInput)) {
-                loginAsAdmin(rawInput);
-                return;
-            }
-
-            // الحالة 3: كود مشترك لوحده
-            if (allowedClients.includes(rawInput)) {
-                if (isLocked(rawInput)) {
-                    showError(
-                        'THIS ACCOUNT IS LOCKED. YOU CANNOT OPEN IT AGAIN UNLESS YOU CONTACT THE ADMINISTRATION.<br>' +
-                        'هذا الحساب مغلق ولا يمكن فتحه إلا بعد التواصل مع الإدارة'
-                    );
-                    passwordInput.value = '';
-                    return;
-                }
-                if (isExhausted(rawInput)) {
-                    showError(
-                        'YOUR SESSIONS ARE FINISHED. THE ACCOUNT IS LOCKED. PLEASE CONTACT THE ADMINISTRATION TO RENEW.<br>' +
-                        'انتهت جلساتك والحساب مغلق، برجاء التواصل مع الإدارة للتجديد'
-                    );
-                    passwordInput.value = '';
-                    return;
-                }
-                loginAsClient(rawInput);
-                return;
-            }
-
-            showError('Invalid Code. Access Denied');
-            passwordInput.value = '';
-        });
-
-        readyBtn.addEventListener('click', () => {
-            introScreen.classList.add('hidden');
-            appContainer.classList.remove('hidden');
-
-            // أيقونة النوت بتظهر للمشترك بس (مش للماستر)
-            if (currentClientCode) {
-                noteFab.classList.add('visible');
-                refreshNoteBadge();
-            }
-        });
-
-        // ================== COACH NOTES ==================
-        function noteUrl(code) {
-            const key = code.replace(/[.$#\[\]\/]/g, '').replace(/\s+/g, '_');
-            return `${FIREBASE_URL.replace(/\/+$/, '')}/${NOTES_PATH}/${encodeURIComponent(key)}.json`;
-        }
-
-        async function fetchNote(code) {
-            const r = await fetch(noteUrl(code), { cache: 'no-store' });
-            if (!r.ok) throw new Error('net');
-            return await r.json();   // null أو { text, updatedAt }
-        }
-
-        async function saveNote(code, text) {
-            const r = await fetch(noteUrl(code), {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: text, updatedAt: Date.now() })
-            });
-            if (!r.ok) throw new Error('net');
-        }
-
-        async function deleteNote(code) {
-            const r = await fetch(noteUrl(code), { method: 'DELETE' });
-            if (!r.ok) throw new Error('net');
-        }
-
-        function formatNoteDate(ts) {
-            if (!ts) return '';
-            try {
-                return new Date(ts).toLocaleString('en-GB', {
-                    day: '2-digit', month: 'short', year: 'numeric',
-                    hour: '2-digit', minute: '2-digit'
-                });
-            } catch (e) {
-                return '';
-            }
-        }
-
-        // ---------- صفحة الكابتن (كتابة / تعديل النوت) ----------
-        let noteEditingClient = null;
-
-        function setNoteStatus(text, kind) {
-            noteEditStatus.textContent = text;
-            noteEditStatus.className = 'note-status' + (kind ? ' ' + kind : '');
-        }
-
-        function setNoteBusy(busy) {
-            noteSaveBtn.disabled = busy;
-            noteClearBtn.disabled = busy;
-        }
-
-        async function openNoteEditor(client) {
-            hideMessages();
-            passwordInput.value = '';
-
-            noteEditingClient = client;
-            noteEditClient.textContent = client;
-            noteTextarea.value = '';
-            setNoteStatus('Loading current note...', '');
-            setNoteBusy(true);
-
-            loginScreen.classList.add('hidden');
-            noteScreen.classList.remove('hidden');
-
-            try {
-                const n = await fetchNote(client);
-                if (n && n.text) {
-                    noteTextarea.value = n.text;
-                    setNoteStatus('Last updated: ' + formatNoteDate(n.updatedAt), '');
-                } else {
-                    setNoteStatus('No note yet. Write one below.', '');
-                }
-            } catch (e) {
-                setNoteStatus('Could not load the current note. Check your internet.', 'error');
-            }
-            setNoteBusy(false);
-        }
-
-        noteSaveBtn.addEventListener('click', async () => {
-            if (!noteEditingClient) return;
-            const text = noteTextarea.value.trim();
-            if (!text) {
-                setNoteStatus('Write something first, or use DELETE NOTE to remove it.', 'error');
-                return;
-            }
-            setNoteBusy(true);
-            setNoteStatus('Saving...', '');
-            try {
-                await saveNote(noteEditingClient, text);
-                setNoteStatus('Saved ✅ - the client can see it now / تم الحفظ', 'ok');
-            } catch (e) {
-                setNoteStatus('Could not save. Check your internet and try again.', 'error');
-            }
-            setNoteBusy(false);
-        });
-
-        noteClearBtn.addEventListener('click', async () => {
-            if (!noteEditingClient) return;
-            if (!confirm(`Delete the note for ${noteEditingClient}?`)) return;
-            setNoteBusy(true);
-            setNoteStatus('Deleting...', '');
-            try {
-                await deleteNote(noteEditingClient);
-                noteTextarea.value = '';
-                setNoteStatus('Note deleted ✅ / تم الحذف', 'ok');
-            } catch (e) {
-                setNoteStatus('Could not delete. Check your internet and try again.', 'error');
-            }
-            setNoteBusy(false);
-        });
-
-        noteBackBtn.addEventListener('click', () => {
-            noteEditingClient = null;
-            noteScreen.classList.add('hidden');
-            loginScreen.classList.remove('hidden');
-        });
-
-        // ---------- أيقونة المشترك ----------
-        async function refreshNoteBadge() {
-            if (!currentClientCode) return;
-            try {
-                const n = await fetchNote(currentClientCode);
-                noteFab.classList.toggle('has-note', !!(n && n.text));
-            } catch (e) {
-                /* مفيش نت: نسيب الأيقونة زي ما هي */
-            }
-        }
-
-        async function openNoteModal() {
-            if (!currentClientCode) return;
-
-            noteModal.classList.remove('hidden');
-            noteModalBody.className = 'note-modal-body empty';
-            noteModalBody.textContent = 'Loading...';
-            noteModalMeta.textContent = '';
-
-            try {
-                const n = await fetchNote(currentClientCode);
-                if (n && n.text) {
-                    noteModalBody.className = 'note-modal-body';
-                    noteModalBody.textContent = n.text;
-                    noteModalMeta.textContent = 'Updated: ' + formatNoteDate(n.updatedAt);
-                    noteFab.classList.add('has-note');
-                } else {
-                    noteModalBody.textContent = 'NO NOTE FROM YOUR COACH YET / لا توجد ملاحظات من الكابتن حتى الآن';
-                    noteFab.classList.remove('has-note');
-                }
-            } catch (e) {
-                noteModalBody.textContent = 'COULD NOT LOAD THE NOTE. CHECK YOUR INTERNET AND TRY AGAIN / تأكد من الإنترنت وحاول مرة أخرى';
-            }
-        }
-
-        function closeNoteModal() {
-            noteModal.classList.add('hidden');
-        }
-
-        noteFab.addEventListener('click', openNoteModal);
-        noteCloseBtn.addEventListener('click', closeNoteModal);
-        noteModal.addEventListener('click', (e) => {
-            if (e.target === noteModal) closeNoteModal();
-        });
-
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && noteFab.classList.contains('visible')) {
-                refreshNoteBadge();
-            }
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key !== 'Escape') return;
-            closeNoteModal();
-            closeImage();
-        });
-
-        // ================== NAVIGATION ==================
-        document.querySelectorAll('.program-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const programKey = card.getAttribute('data-program');
-                currentProgramKey = programKey;
-                renderCategories(programKey);
-                switchView(categoriesView);
-                backHomeBtn.classList.remove('hidden');
-                window.scrollTo(0, 0);
-            });
-        });
-
-        backHomeBtn.addEventListener('click', () => {
-            if (slotsView.classList.contains('active')) {
-                closeVideo();
-                renderCategories(currentProgramKey);
-                switchView(categoriesView);
-            } else {
-                currentProgramKey = null;
-                switchView(programsView);
-                backHomeBtn.classList.add('hidden');
-            }
-            window.scrollTo(0, 0);
-        });
-
-        function switchView(targetView) {
-            [programsView, categoriesView, slotsView].forEach(view => {
-                view.classList.remove('active');
-            });
-            targetView.classList.add('active');
-        }
-
-        function renderCategories(programKey) {
-            const program = programsData[programKey];
-            selectedProgramTitle.textContent = program.title;
-            categoriesGrid.innerHTML = '';
-
-            program.categories.forEach(cat => {
-                const catCard = document.createElement('div');
-                catCard.className = 'category-card';
-                catCard.innerHTML = `
-                    <h4>${cat.name}</h4>
-                    <i class="fa-solid fa-chevron-right"></i>
-                `;
-                catCard.addEventListener('click', () => {
-                    renderSlots(cat);
-                    switchView(slotsView);
-                    window.scrollTo(0, 0);
-                });
-                categoriesGrid.appendChild(catCard);
-            });
-        }
-
-        // ================== EXERCISE SLOTS + VIDEOS ==================
-        let currentCategory = null;
-        let slotsState = [];
-        let currentSlotIndex = -1;
-
-        function pad2(n) {
-            return n < 10 ? '0' + n : String(n);
-        }
-
-        function getExerciseName(categoryId, index) {
-            const custom = exerciseNames[categoryId] && exerciseNames[categoryId][index - 1];
-            return custom ? custom : `EXERCISE ${pad2(index)}`;
-        }
-
-        function renderSlots(category) {
-            currentCategory = category;
-            slotsState = [];
-            selectedCategoryTitle.textContent = `${category.name.toUpperCase()} EXERCISES`;
-            slotsContainer.innerHTML = '';
-
-            for (let i = 1; i <= category.slots; i++) {
-                const globalVideoIndex = Object.keys(programsData)
-                    .slice(0, Object.keys(programsData).indexOf(currentProgramKey))
-                    .reduce((sum, key) => sum + programsData[key].categories.length * 15, 0)
-                    + programsData[currentProgramKey].categories.findIndex(c => c.id === category.id) * 15
-                    + i;
-                const src = videoPaths[globalVideoIndex] || "";
-                const name = getExerciseName(category.id, i);
-                const state = { src, name, available: false };
-                slotsState.push(state);
-
-                const slotBox = document.createElement('div');
-                slotBox.className = 'slot-box';
-                slotBox.innerHTML = `
-                    <div class="slot-thumb">
-                        <video muted playsinline preload="metadata"></video>
-                        <div class="slot-play"><i class="fa-solid fa-play"></i></div>
-                    </div>
-                    <div class="slot-info">
-                        <div class="slot-num">#${pad2(i)}</div>
-                        <div class="slot-label">${name}</div>
-                    </div>
-                `;
-
-                const thumbVideo = slotBox.querySelector('video');
-                const thumb = slotBox.querySelector('.slot-thumb');
-
-                thumbVideo.addEventListener('loadedmetadata', () => {
-                    state.available = true;
-                    slotBox.classList.add('has-video');
-                });
-
-                thumbVideo.addEventListener('error', () => {
-                    state.available = false;
-                    slotBox.classList.remove('has-video');
-                    slotBox.classList.add('no-video');
-                    thumb.innerHTML = '<i class="fa-solid fa-lock"></i>';
-                    slotBox.querySelector('.slot-label').textContent = 'COMING SOON';
-                });
-
-                if (src && !src.includes("...")) {
-                    thumbVideo.src = src + '#t=0.1';
-                } else {
-                    thumbVideo.dispatchEvent(new Event('error'));
-                }
-
-                slotBox.addEventListener('click', () => {
-                    if (state.available) {
-                        openVideo(i - 1);
-                    }
-                });
-
-                slotsContainer.appendChild(slotBox);
-            }
-        }
-
-        // ================== VIDEO MODAL ==================
-        function findAvailable(fromIndex, direction) {
-            let i = fromIndex + direction;
-            while (i >= 0 && i < slotsState.length) {
-                if (slotsState[i].available) return i;
-                i += direction;
-            }
-            return -1;
-        }
-
-        function updateModalNav() {
-            videoPrevBtn.disabled = findAvailable(currentSlotIndex, -1) === -1;
-            videoNextBtn.disabled = findAvailable(currentSlotIndex, 1) === -1;
-            videoCounter.textContent = `${currentSlotIndex + 1} / ${slotsState.length}`;
-        }
-
-        function openVideo(index) {
-            const state = slotsState[index];
-            if (!state) return;
-
-            currentSlotIndex = index;
-            videoModalTitle.textContent = `${currentCategory.name.toUpperCase()} - ${state.name}`;
-            videoPlayer.src = state.src;
-            videoPlayer.currentTime = 0;
-            videoModal.classList.remove('hidden');
-
-            const playPromise = videoPlayer.play();
-            if (playPromise && typeof playPromise.catch === 'function') {
-                playPromise.catch(() => {});
-            }
-
-            updateModalNav();
-        }
-
-        function closeVideo() {
-            if (videoModal.classList.contains('hidden')) return;
-            videoPlayer.pause();
-            videoPlayer.removeAttribute('src');
-            videoPlayer.load();
-            videoModal.classList.add('hidden');
-        }
-
-        videoCloseBtn.addEventListener('click', closeVideo);
-
-        videoModal.addEventListener('click', (e) => {
-            if (e.target === videoModal) closeVideo();
-        });
-
-        videoPrevBtn.addEventListener('click', () => {
-            const prev = findAvailable(currentSlotIndex, -1);
-            if (prev !== -1) openVideo(prev);
-        });
-
-        videoNextBtn.addEventListener('click', () => {
-            const next = findAvailable(currentSlotIndex, 1);
-            if (next !== -1) openVideo(next);
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (videoModal.classList.contains('hidden')) return;
-            if (e.key === 'Escape') closeVideo();
-            if (e.key === 'ArrowRight') videoNextBtn.click();
-            if (e.key === 'ArrowLeft') videoPrevBtn.click();
-        });
-
-        // ================== START ==================
-        renderCerts();
-    </script>
+      </div>
+
+      <div class="msg-err" id="err2"></div>
+      <div class="actions">
+        <button type="button" class="btn ghost" id="back">→ رجوع</button>
+        <button type="submit" class="btn">إرسال على واتساب</button>
+      </div>
+    </form>
+  </section>
+
+  <footer><i></i>ZOZKA FIT<i></i></footer>
+</div>
+
+<script>
+  /* ============ إعدادات ============ */
+  const WHATSAPP_NUMBER = "201119052812";                 // +20 11 19052812
+  const TEST_LINK = "........................";            // ← حط لينك التجربة هنا لما يجهز
+  const LOGO_SRC  = ".............................";       // ← حط لينك صورة اللوجو أو اسم الملف (مثال: "logo.jpg") لما تجهز
+
+  /* ============ عناصر ============ */
+  const $ = (id) => document.getElementById(id);
+  const page1 = $("page1"), page2 = $("page2");
+  let selectedPack = "";
+
+  /* صورة اللوجو: لو لسه نقط بيظهر الاسم مكتوب، ولو حطيت صورة بتظهر هي */
+  (function setLogo(){
+    const img = $("logoImg"), txt = $("logoText");
+    if (/^\.*$/.test(LOGO_SRC.trim())) return;      // لسه نقط
+    img.onload  = () => { img.style.display = "block"; txt.style.display = "none"; };
+    img.onerror = () => { img.style.display = "none";  txt.style.display = "block"; };
+    img.src = LOGO_SRC;
+  })();
+
+  /* لينك التجربة: يظهر كنقط لحد ما تحط لينك حقيقي */
+  (function setTestLink(){
+    const a = $("testLink");
+    if (/^https?:\/\//i.test(TEST_LINK)) {
+      a.href = TEST_LINK; a.textContent = TEST_LINK;
+    } else {
+      a.textContent = TEST_LINK; a.removeAttribute("href");
+    }
+  })();
+
+  /* ============ اختيار الباكدج ============ */
+  document.querySelectorAll(".pack").forEach(card => {
+    card.addEventListener("click", (e) => {
+      e.preventDefault();   // يمنع الصفحة إنها تطلع لفوق
+      document.querySelectorAll(".pack").forEach(c => c.classList.remove("selected"));
+      card.classList.add("selected");
+      card.querySelector("input").checked = true;
+      selectedPack = card.dataset.pack;
+      $("err1").textContent = "";
+    });
+  });
+
+  function goStep(n){
+    page1.classList.toggle("show", n === 1);
+    page2.classList.toggle("show", n === 2);
+    $("d1").className = "dot " + (n === 1 ? "active" : "done");
+    $("d2").className = "dot " + (n === 2 ? "active" : "");
+    $("l1").classList.toggle("on", n === 2);
+  }
+
+  $("next").addEventListener("click", () => {
+    if (!selectedPack) {
+      $("err1").textContent = "من فضلك اختار باكدج الأول";
+      $("err1").scrollIntoView({behavior:"smooth", block:"center"});
+      return;
+    }
+    $("chosenName").textContent = selectedPack;
+    goStep(2);
+  });
+  $("back").addEventListener("click", () => goStep(1));
+
+  /* ============ الحالة الصحية ============ */
+  document.querySelectorAll('input[name="health"]').forEach(r => {
+    r.addEventListener("change", () => {
+      const yes = document.querySelector('input[name="health"]:checked').value === "يوجد";
+      $("healthBox").style.display = yes ? "block" : "none";
+      if (!yes) $("healthText").value = "";
+    });
+  });
+
+  /* ============ إرسال على واتساب ============ */
+  $("form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const err = $("err2"); err.textContent = "";
+
+    const name = $("name").value.trim();
+    const age = $("age").value.trim();
+    const gender = (document.querySelector('input[name="gender"]:checked') || {}).value;
+    const goal = $("goal").value.trim();
+    const health = (document.querySelector('input[name="health"]:checked') || {}).value;
+    const healthText = $("healthText").value.trim();
+
+    const fail = (msg) => { err.textContent = msg; err.scrollIntoView({behavior:"smooth", block:"center"}); };
+
+    if (!name)   return fail("من فضلك اكتب الاسم");
+    if (!age || age < 10 || age > 90) return fail("من فضلك اكتب سن صحيح");
+    if (!gender) return fail("من فضلك اختار الجنس");
+    if (!goal)   return fail("من فضلك اكتب هدفك");
+    if (!health) return fail("من فضلك اختار الحالة الصحية");
+    if (health === "يوجد" && !healthText) return fail("من فضلك اكتب حالتك الصحية");
+
+    const line = "------------------------------";
+    const lines = [
+      "*طلب اشتراك جديد - ZOZKA FIT*",
+      line,
+      "*الباكدج المختار*",
+      selectedPack,
+      line,
+      "*بيانات العميل*",
+      "الاسم: " + name,
+      "السن: " + age + " سنة",
+      "الجنس: " + gender,
+      line,
+      "*الهدف*",
+      goal,
+      line,
+      "*الحالة الصحية*",
+      (health === "يوجد" ? "يوجد" : "لا يوجد"),
+      ...(health === "يوجد" ? ["التفاصيل: " + healthText] : []),
+      line
+    ];
+    const url = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(lines.join("\n"));
+    /* لو المتصفح منع النافذة الجديدة (زي متصفح انستجرام/فيسبوك أو بعض الموبايلات) نفتح واتساب في نفس الصفحة */
+    const w = window.open(url, "_blank");
+    if (!w) window.location.href = url;
+  });
+</script>
 </body>
 </html>
